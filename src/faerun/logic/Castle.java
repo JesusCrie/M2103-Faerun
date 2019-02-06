@@ -10,25 +10,19 @@ public class Castle {
     public static final int RESOURCES_PER_TURN = 1;
 
     // Resources
-    private int novices;
     private int resources = 3;
 
     // Warriors
-    private List<Warrior> warriorsReady = new ArrayList<>();
-    private Queue<Warrior> trainingQueue = new LinkedList<>();
+    private Deque<Warrior> trainingQueue = new LinkedList<>();
 
     // Position
     private final int position;
 
+    /**
+     * @param position - The position of the castle on the board.
+     */
     public Castle(final int position) {
         this.position = position;
-    }
-
-    /**
-     * @return The amount of novices in this castle.
-     */
-    public int getNovices() {
-        return novices;
     }
 
     /**
@@ -39,10 +33,10 @@ public class Castle {
     }
 
     /**
-     * @return A view of the available warriors in this castle.
+     * @return A view of the queued warriors.
      */
-    public List<Warrior> getWarriorsReady() {
-        return Collections.unmodifiableList(warriorsReady);
+    public List<Warrior> getWarriorsQueue() {
+        return Collections.unmodifiableList((LinkedList<Warrior>) trainingQueue);
     }
 
     /**
@@ -55,7 +49,7 @@ public class Castle {
     /**
      * Automatically gather the predefined {@link #RESOURCES_PER_TURN} as resources.
      */
-    public void autoCollectResources() {
+    public void collectResources() {
         resources += RESOURCES_PER_TURN;
     }
 
@@ -69,36 +63,36 @@ public class Castle {
 
     /**
      * Consume as much of the training queue as possible to train warriors.
+     *
+     * @return A list of the warriors successfully trained.
      */
-    public void train() {
-        while (trainSingle(trainingQueue.poll())) {
-            // Train
-        }
+    public List<Warrior> train() {
+        final List<Warrior> trained = new LinkedList<>();
+
+        Warrior w;
+        while ((w = trainingQueue.poll()) != null && trainSingle(w))
+            trained.add(w);
+
+        return trained;
     }
 
     /**
      * Try to train a single warrior.
      *
-     * @param w - The warrior to train, can be {@code null}.
+     * @param w - The warrior to train, can be.
      * @return True if the warrior was successfully trained.
      */
     private boolean trainSingle(final Warrior w) {
-        if (w == null)
-            return false;
-
         // Calculate cost
         final int cost = w.getCost();
 
         // Check available resources
-        if (cost > resources || novices <= 0)
+        if (cost > resources)
             return false;
 
         // Use resources
         resources -= cost;
-        --novices;
 
-        // Train warrior
-        warriorsReady.add(w);
         return true;
     }
 }

@@ -1,6 +1,12 @@
 package faerun.warrior;
 
+import faerun.game.Player;
+
 public class DwarfChief extends Dwarf {
+
+    public DwarfChief(final Player player) {
+        super(player);
+    }
 
     @Override
     public int getCost() {

@@ -1,5 +1,7 @@
 package faerun.warrior;
 
+import faerun.game.Player;
+
 import java.util.Random;
 
 public abstract class Warrior {
@@ -14,8 +16,20 @@ public abstract class Warrior {
      */
     protected static final Random RANDOM = new Random();
 
+    private final Player owner;
     protected int strength = 10;
     protected int health = 100;
+
+    public Warrior(final Player player) {
+        owner = player;
+    }
+
+    /**
+     * @return The {@link Player} That owns this warrior.
+     */
+    public Player getOwner() {
+        return owner;
+    }
 
     /**
      * @return The actual strength of the warrior.
@@ -53,8 +67,8 @@ public abstract class Warrior {
 
     /**
      * Roll {@link #strength} times a dice between 1 and 3 and apply the damage
-     * to the target
-     * @param other - The other warrior to attack
+     * to the target.
+     * @param other - The other warrior to attack.
      */
     public void attack(final Warrior other) {
         int damage = 0;
@@ -66,8 +80,8 @@ public abstract class Warrior {
     }
 
     /**
-     * Take damage, some warriors may override this method
-     * @param damage - The damage to apply
+     * Take damage, some warriors may override this method.
+     * @param damage - The damage to apply.
      */
     public void takeDamage(final int damage) {
         setHealth(getHealth() - damage);

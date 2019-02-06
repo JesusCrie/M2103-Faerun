@@ -1,8 +1,11 @@
 package faerun.warrior;
 
+import faerun.game.Player;
+
 public class Elf extends Warrior {
 
-    public Elf() {
+    public Elf(final Player player) {
+        super(player);
         strength *= 2;
     }
 
