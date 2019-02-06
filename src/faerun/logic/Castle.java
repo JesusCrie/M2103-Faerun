@@ -1,6 +1,6 @@
 package faerun.logic;
 
-import faerun.warrior.*;
+import faerun.warrior.Warrior;
 
 import java.util.*;
 
@@ -9,7 +9,7 @@ public class Castle {
     // Constants
     public static final int RESOURCES_PER_TURN = 1;
 
-    // Resouces
+    // Resources
     private int novices;
     private int resources = 3;
 
@@ -17,29 +17,43 @@ public class Castle {
     private List<Warrior> warriorsReady = new ArrayList<>();
     private Queue<Warrior> trainingQueue = new LinkedList<>();
 
+    // Position
+    private final int position;
+
+    public Castle(final int position) {
+        this.position = position;
+    }
+
     /**
-     * @return The amount of novices in this castle
+     * @return The amount of novices in this castle.
      */
     public int getNovices() {
         return novices;
     }
 
     /**
-     * @return The amount of resources in this castle
+     * @return The amount of resources in this castle.
      */
     public int getResources() {
         return resources;
     }
 
     /**
-     * @return A view of the available warriors in this castle
+     * @return A view of the available warriors in this castle.
      */
     public List<Warrior> getWarriorsReady() {
         return Collections.unmodifiableList(warriorsReady);
     }
 
     /**
-     * Automatically gather the predefined {@link #RESOURCES_PER_TURN} as resources
+     * @return The position of the castle on the board.
+     */
+    public int getPosition() {
+        return position;
+    }
+
+    /**
+     * Automatically gather the predefined {@link #RESOURCES_PER_TURN} as resources.
      */
     public void autoCollectResources() {
         resources += RESOURCES_PER_TURN;
@@ -54,7 +68,7 @@ public class Castle {
     }
 
     /**
-     * Consume as much of the training queue as possible.
+     * Consume as much of the training queue as possible to train warriors.
      */
     public void train() {
         while (trainSingle(trainingQueue.poll())) {
@@ -64,8 +78,9 @@ public class Castle {
 
     /**
      * Try to train a single warrior.
+     *
      * @param w - The warrior to train, can be {@code null}.
-     * @return True if the warrior was successfully trained
+     * @return True if the warrior was successfully trained.
      */
     private boolean trainSingle(final Warrior w) {
         if (w == null)

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="154.0" y="468.0">faerun.warrior.DwarfChief</node>
+    <node x="16.0" y="329.0">faerun.warrior.Elf</node>
+    <node x="56.25" y="0.0">faerun.warrior.Warrior</node>
+    <node x="154.0" y="329.0">faerun.warrior.Dwarf</node>
+    <node x="0.0" y="468.0">faerun.warrior.ElfChief</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="faerun.warrior.ElfChief" target="faerun.warrior.Elf">
+      <point x="0.0" y="-44.5" />
+      <point x="0.0" y="44.5" />
+    </edge>
+    <edge source="faerun.warrior.Elf" target="faerun.warrior.Warrior">
+      <point x="0.0" y="-44.5" />
+      <point x="67.0" y="304.0" />
+      <point x="110.5" y="304.0" />
+      <point x="-54.25" y="139.5" />
+    </edge>
+    <edge source="faerun.warrior.DwarfChief" target="faerun.warrior.Dwarf">
+      <point x="0.0" y="-44.5" />
+      <point x="0.0" y="44.5" />
+    </edge>
+    <edge source="faerun.warrior.Dwarf" target="faerun.warrior.Warrior">
+      <point x="0.0" y="-44.5" />
+      <point x="262.5" y="304.0" />
+      <point x="219.0" y="304.0" />
+      <point x="54.25" y="139.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="186.0" y="279.0" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Constructors</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

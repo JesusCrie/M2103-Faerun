@@ -5,12 +5,12 @@ import java.util.Random;
 public abstract class Warrior {
 
     /**
-     * The base cost of the unit for training
+     * The base cost of the unit for training.
      */
     protected static final int BASE_COST = 1;
 
     /**
-     * Global random for all warriors
+     * Global random for all warriors.
      */
     protected static final Random RANDOM = new Random();
 
@@ -18,36 +18,36 @@ public abstract class Warrior {
     protected int health = 100;
 
     /**
-     * @return The actual strength of the warrior
+     * @return The actual strength of the warrior.
      */
     public int getStrength() {
         return strength;
     }
 
     /**
-     * @return The current amount of health point of the warrior
+     * @return The current amount of health point of the warrior.
      */
     public int getHealth() {
         return health;
     }
 
     /**
-     * Set the health of this warrior, can't be negative
-     * @param health - The wanted health
+     * Set the health of this warrior, can't be negative.
+     * @param health - The wanted health.
      */
     public void setHealth(int health) {
         this.health = Math.max(health, 0);
     }
 
     /**
-     * @return True if the warrior is alive
+     * @return True if the warrior is alive.
      */
     public boolean isAlive() {
         return health != 0;
     }
 
     /**
-     * @return The training cost of this unit
+     * @return The training cost of this unit.
      */
     public abstract int getCost();
 
