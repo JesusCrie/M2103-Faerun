@@ -26,11 +26,23 @@ public class BoardCell {
     }
 
     public void addWarriors(@Nonnull final Warrior... ws) {
-        warriors.addAll(Arrays.asList(ws));
+        addWarriors(Arrays.asList(ws));
+    }
+
+    public void addWarriors(@Nonnull final List<Warrior> ws) {
+        warriors.addAll(ws);
     }
 
     public void removeWarriors(@Nonnull final Warrior... ws) {
         warriors.removeAll(Arrays.asList(ws));
+    }
+
+    @Nonnull
+    public List<Warrior> popAll() {
+        final List<Warrior> copy = new ArrayList<>(warriors);
+        warriors.clear();
+
+        return copy;
     }
 
     public int countAll() {

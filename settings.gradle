@@ -1,2 +1,3 @@
 rootProject.name = 'faerun'
+include 'com.jesus_crie.faerun.model'
 
