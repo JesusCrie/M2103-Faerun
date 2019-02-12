@@ -37,9 +37,11 @@ public class Castle {
     }
 
     public void queueWarriors(@Nonnull final Warrior... ws) {
-        for (Warrior w : ws) {
-            trainingQueue.offer(w);
-        }
+        for (Warrior w : ws) trainingQueue.offer(w);
+    }
+
+    public void queueWarrior(@Nonnull final Warrior w) {
+        trainingQueue.offer(w);
     }
 
     @Nonnull

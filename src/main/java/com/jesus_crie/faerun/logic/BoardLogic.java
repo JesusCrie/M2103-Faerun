@@ -7,6 +7,7 @@ import com.jesus_crie.faerun.model.warrior.Warrior;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -26,14 +27,14 @@ public class BoardLogic {
     }
 
     @Nonnull
-    public Warrior[] buildWarrior(@Nonnull final Player owner,
+    public List<Warrior> buildWarrior(@Nonnull final Player owner,
                                   @Nonnull final Class<? extends Warrior> warriorClass,
                                   int amount) {
-        final Warrior[] w = new Warrior[amount];
+        final List<Warrior> w = new ArrayList<>(amount);
 
         for (int i = 0; i < amount; i++) {
             try {
-                w[i] = warriorClass.getConstructor(Player.class).newInstance(owner);
+                w.add(warriorClass.getConstructor(Player.class).newInstance(owner));
             } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException ignore) {
             } // Would never occur
         }

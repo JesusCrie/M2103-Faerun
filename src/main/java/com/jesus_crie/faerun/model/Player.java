@@ -5,14 +5,21 @@ import javax.annotation.Nullable;
 
 public class Player implements Comparable<Player> {
 
+    public enum Side {
+        LEFT, RIGHT
+    }
+
     private final String pseudo;
+    private final Side side;
     private int score = 0;
 
     /**
      * @param pseudo - The username of the player.
      */
-    public Player(@Nonnull final String pseudo) {
+    public Player(@Nonnull final String pseudo,
+                  @Nonnull final Side side) {
         this.pseudo = pseudo;
+        this.side = side;
     }
 
     /**
@@ -21,6 +28,14 @@ public class Player implements Comparable<Player> {
     @Nonnull
     public String getPseudo() {
         return pseudo;
+    }
+
+    /**
+     * @return The side of the player on the board.
+     */
+    @Nonnull
+    public Side getSide() {
+        return side;
     }
 
     /**

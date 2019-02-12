@@ -5,7 +5,7 @@ plugins {
 group 'com.jesus_crie'
 version '1.0'
 
-sourceCompatibility = 1.9
+sourceCompatibility = 1.11
 
 repositories {
     mavenCentral()

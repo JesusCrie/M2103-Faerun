@@ -60,7 +60,7 @@ public abstract class Warrior {
      * Take damage, some warriors may override this method.
      * @param damage - The damage to apply.
      */
-    protected void takeDamage(final int damage) {
+    public void takeDamage(final int damage) {
         setHealth(getHealth() - damage);
     }
 
