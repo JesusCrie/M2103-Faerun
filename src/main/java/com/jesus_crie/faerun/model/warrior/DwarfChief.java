@@ -1,16 +1,18 @@
-package faerun.warrior;
+package com.jesus_crie.faerun.model.warrior;
 
-import faerun.game.Player;
+import com.jesus_crie.faerun.model.Player;
+
+import javax.annotation.Nonnull;
 
 public class DwarfChief extends Dwarf {
 
-    public DwarfChief(final Player player) {
+    public DwarfChief(@Nonnull final Player player) {
         super(player);
     }
 
     @Override
     public int getCost() {
-        return BASE_COST * 3;
+        return 3;
     }
 
     @Override

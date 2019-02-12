@@ -1,32 +1,23 @@
-package faerun.warrior;
+package com.jesus_crie.faerun.model.warrior;
 
-import faerun.game.Player;
+import com.jesus_crie.faerun.model.Player;
 
-import java.util.Random;
+import javax.annotation.Nonnull;
 
 public abstract class Warrior {
-
-    /**
-     * The base cost of the unit for training.
-     */
-    protected static final int BASE_COST = 1;
-
-    /**
-     * Global random for all warriors.
-     */
-    protected static final Random RANDOM = new Random();
 
     private final Player owner;
     protected int strength = 10;
     protected int health = 100;
 
-    public Warrior(final Player player) {
+    public Warrior(@Nonnull final Player player) {
         owner = player;
     }
 
     /**
      * @return The {@link Player} That owns this warrior.
      */
+    @Nonnull
     public Player getOwner() {
         return owner;
     }
@@ -64,20 +55,6 @@ public abstract class Warrior {
      * @return The training cost of this unit.
      */
     public abstract int getCost();
-
-    /**
-     * Roll {@link #strength} times a dice between 1 and 3 and apply the damage
-     * to the target.
-     * @param other - The other warrior to attack.
-     */
-    public void attack(final Warrior other) {
-        int damage = 0;
-        for (int i = 0; i < getStrength(); i++) {
-            damage += RANDOM.nextInt(3) + 1;
-        }
-
-        other.takeDamage(damage);
-    }
 
     /**
      * Take damage, some warriors may override this method.

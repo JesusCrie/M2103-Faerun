@@ -1,4 +1,7 @@
-package faerun.game;
+package com.jesus_crie.faerun.model;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class Player implements Comparable<Player> {
 
@@ -8,13 +11,14 @@ public class Player implements Comparable<Player> {
     /**
      * @param pseudo - The username of the player.
      */
-    public Player(final String pseudo) {
+    public Player(@Nonnull final String pseudo) {
         this.pseudo = pseudo;
     }
 
     /**
      * @return The username of the player.
      */
+    @Nonnull
     public String getPseudo() {
         return pseudo;
     }
@@ -42,7 +46,7 @@ public class Player implements Comparable<Player> {
      * @return True if the 2 objects are the same player, otherwise false.
      */
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals(@Nullable final Object obj) {
         return obj instanceof Player && pseudo.equals(((Player) obj).pseudo);
     }
 
@@ -54,7 +58,7 @@ public class Player implements Comparable<Player> {
      * that the other player.
      */
     @Override
-    public int compareTo(final Player player) {
+    public int compareTo(@Nonnull final Player player) {
         return score - player.score;
     }
 }
