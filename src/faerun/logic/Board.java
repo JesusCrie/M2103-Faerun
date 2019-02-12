@@ -137,6 +137,7 @@ public class Board {
             throw new IllegalArgumentException("Provided position is out of bounds !");
 
         board.get(position).addWarriors(warriors);
+        board.get(position).flush();
     }
 
     /**

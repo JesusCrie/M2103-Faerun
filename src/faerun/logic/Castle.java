@@ -92,7 +92,6 @@ public class Castle {
 
         // Use resources
         resources -= cost;
-
         return true;
     }
 }
