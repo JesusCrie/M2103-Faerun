@@ -38,12 +38,12 @@ public class GameLogic {
         // TODO 2/12/19
     }
 
-    private void performPlayerRound(@Nonnull final Player player) {
+    void performPlayerRound(@Nonnull final Player player) {
         performRoundTraining(player);
         performRoundMoveAndFight(player);
     }
 
-    private void performRoundTraining(@Nonnull final Player player) {
+    void performRoundTraining(@Nonnull final Player player) {
         // Ask for what to train
         final Map<Class<? extends Warrior>, Integer> toBuild = players.get(player).getLeft().provideQueue();
 
@@ -62,7 +62,7 @@ public class GameLogic {
         // Train and spawn them later
     }
 
-    private void performRoundMoveAndFight(@Nonnull final Player player) {
+    void performRoundMoveAndFight(@Nonnull final Player player) {
         // If left player
         if (player.getSide() == Player.Side.LEFT) {
             for (int i = 0; i < boardLogic.getBoard().getSettings().getSize() - 1; i++) {
@@ -97,20 +97,37 @@ public class GameLogic {
             Collections.shuffle(allies);
             Collections.shuffle(enemies);
 
+            // Display regardless to the side of the player
             commonOutputHandler.displayLogStart(cell);
             if (attacker.getSide() == Player.Side.LEFT)
+                commonOutputHandler.displayWarriors(allies, enemies);
+            else
                 commonOutputHandler.displayWarriors(enemies, allies);
-            else commonOutputHandler.displayWarriors(allies, enemies);
 
-            // Attacker attack
-            for (Warrior ally : allies) {
-                int damage = Dice.diceRoll(3, 3);
+            // Attackers
+            attack(allies, enemies);
+            // Defenders response
+            attack(enemies, allies);
+        }
 
-                if (!enemies.isEmpty()) {
-                    commonOutputHandler.displayLogHit(ally, enemies.peek(), damage);
-                    enemies.peek().takeDamage(damage);
-                    if (!enemies.peek().isAlive())
-                        enemies.pop();
+        @SuppressWarnings("ConstantConditions")
+        void attack(@Nonnull final Queue<Warrior> attackers, @Nonnull final Queue<Warrior> defenders) {
+            // For each attacker
+            for (Warrior attacker : attackers) {
+                // Compute damages
+                final int damage = Dice.diceRoll(3, attacker.getStrength());
+
+                // Check if there's an enemy
+                if (!defenders.isEmpty()) {
+                    // Hit
+                    defenders.peek().takeDamage(damage);
+                    commonOutputHandler.displayLogHit(attacker, defenders.peek(), damage);
+
+                    // Check dead
+                    if (!defenders.peek().isAlive()) {
+                        final Warrior dead = defenders.poll();
+                        commonOutputHandler.displayLogDead(dead);
+                    }
                 }
             }
         }
