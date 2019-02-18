@@ -4,6 +4,7 @@ import com.jesus_crie.faerun.iohandler.FightOutputHandler;
 import com.jesus_crie.faerun.iohandler.InputHandler;
 import com.jesus_crie.faerun.iohandler.OutputHandler;
 import com.jesus_crie.faerun.model.Player;
+import com.jesus_crie.faerun.model.board.Board;
 import com.jesus_crie.faerun.model.board.BoardCell;
 import com.jesus_crie.faerun.model.board.BoardSettings;
 import com.jesus_crie.faerun.model.board.Castle;
@@ -19,6 +20,7 @@ public class GameLogic {
     private final Map<Player, Pair<InputHandler, OutputHandler>> players;
     private final CommonOutputHandler commonOutputHandler;
     private final BoardLogic boardLogic;
+    private int roundNumber = 0;
 
     public GameLogic(@Nonnull final Map<Player, Pair<InputHandler, OutputHandler>> players,
                      @Nonnull final BoardSettings settings) {
@@ -35,12 +37,23 @@ public class GameLogic {
     }
 
     public void performFullRound() {
-        // TODO 2/12/19
+        // Collect players
+        final Player[] players = this.players.keySet().toArray(new Player[2]);
+
+        // Current player
+        Player current = players[0];
+        // Log new round
+        this.players.get(current).getRight().displayNewRound(current, roundNumber);
+
+        // For each player, until victory
+        for (int i = 0; !performPlayerRound(current); current = players[++i % players.length]) {
+            this.players.get(current).getRight().displayNewRound(current, ++roundNumber);
+        }
     }
 
-    void performPlayerRound(@Nonnull final Player player) {
+    boolean performPlayerRound(@Nonnull final Player player) {
         performRoundTraining(player);
-        performRoundMoveAndFight(player);
+        return performRoundMoveAndFight(player);
     }
 
     void performRoundTraining(@Nonnull final Player player) {
@@ -62,18 +75,41 @@ public class GameLogic {
         // Train and spawn them later
     }
 
-    void performRoundMoveAndFight(@Nonnull final Player player) {
+    boolean performRoundMoveAndFight(@Nonnull final Player player) {
         // If left player
         if (player.getSide() == Player.Side.LEFT) {
-            for (int i = 0; i < boardLogic.getBoard().getSettings().getSize() - 1; i++) {
+
+            for (int i = 0; i < boardLogic.getBoard().getSettings().getSize() - 1; ++i) {
                 final BoardCell targetCell = boardLogic.getBoard().getCell(i + 1);
 
-                // If enemies on target cell
-                if (targetCell.countEnnemis(player) != 0) {
-                    new FightLogic(targetCell).fight(player);
-                }
+                if (performRoundMoveAndFightLogic(player, targetCell))
+                    return true;
+            }
+
+        // If right player
+        } else {
+
+            for (int i = boardLogic.getBoard().getSettings().getSize() - 1; i > 0; --i) {
+                final BoardCell targetCell = boardLogic.getBoard().getCell(i - 1);
+
+                if (performRoundMoveAndFightLogic(player, targetCell))
+                    return true;
             }
         }
+
+        return false;
+    }
+
+    private boolean performRoundMoveAndFightLogic(@Nonnull final Player player,
+                                                  @Nonnull final BoardCell cell) {
+        // If enemies on target cell
+        if (cell.countEnnemis(player) != 0) {
+            new FightLogic(cell).fight(player);
+        }
+
+        // No enemy and cell is last cell = victory
+        return cell.countEnnemis(player) == 0
+                && cell.getPosition() == boardLogic.getBoard().getSettings().getSize() - 1;
     }
 
     public class FightLogic {

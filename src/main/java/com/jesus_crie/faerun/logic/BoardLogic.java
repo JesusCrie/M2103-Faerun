@@ -28,8 +28,8 @@ public class BoardLogic {
 
     @Nonnull
     public List<Warrior> buildWarrior(@Nonnull final Player owner,
-                                  @Nonnull final Class<? extends Warrior> warriorClass,
-                                  int amount) {
+                                      @Nonnull final Class<? extends Warrior> warriorClass,
+                                      int amount) {
         final List<Warrior> w = new ArrayList<>(amount);
 
         for (int i = 0; i < amount; i++) {
