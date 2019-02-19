@@ -6,7 +6,7 @@ import javax.annotation.Nullable;
 public class Player {
 
     public enum Side {
-        LEFT, RIGHT
+        LEFT, RIGHT, BOTH, EMPTY
     }
 
     private final String pseudo;

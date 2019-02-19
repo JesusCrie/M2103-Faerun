@@ -42,7 +42,7 @@ public class BoardLogic {
         return w;
     }
 
-    public void spawn(final int position, @Nonnull final Warrior... ws) {
+    public void spawn(final int position, @Nonnull final List<Warrior> ws) {
         board.getCell(position).addWarriors(ws);
     }
 

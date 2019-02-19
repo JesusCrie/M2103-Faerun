@@ -29,4 +29,10 @@ public class BoardSettings {
     public int getInitialResources() {
         return initialResources;
     }
+
+    @Override
+    public String toString() {
+        return String.format("BoardSettings[size: %d, baseCost: %d, diceAmount: %d, initialResources: %d]",
+                getSize(), getBaseCost(), getDiceAmount(), getInitialResources());
+    }
 }

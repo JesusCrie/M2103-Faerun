@@ -22,4 +22,9 @@ public class Pair<T, V> {
     public V getRight() {
         return right;
     }
+
+    @Nonnull
+    public static <T, V> Pair<T, V> of(final T left, final V right) {
+        return new Pair<>(left, right);
+    }
 }

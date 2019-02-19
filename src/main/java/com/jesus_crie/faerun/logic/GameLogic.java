@@ -36,27 +36,37 @@ public class GameLogic {
         return players;
     }
 
-    public void performFullRound() {
+    @Nonnull
+    public Player performFullGame() {
         // Collect players
         final Player[] players = this.players.keySet().toArray(new Player[2]);
 
+        // Index current player
+        byte i = 0;
         // Current player
-        Player current = players[0];
-        // Log new round
-        this.players.get(current).getRight().displayNewRound(current, roundNumber);
-
+        Player current;
         // For each player, until victory
-        for (int i = 0; !performPlayerRound(current); current = players[++i % players.length]) {
+        do {
+            ++i;
+            i %= players.length;
+            current = players[i];
+
+            // Log new round
             this.players.get(current).getRight().displayNewRound(current, ++roundNumber);
-        }
+        } while (!performPlayerRound(current));
+
+        // Return the winning player
+        return current;
     }
 
-    boolean performPlayerRound(@Nonnull final Player player) {
+    private boolean performPlayerRound(@Nonnull final Player player) {
         performRoundTraining(player);
+        players.get(player).getRight().displayBoardProgression(boardLogic.getBoard());
+        players.get(player).getRight().displayBoard(boardLogic.getBoard());
         return performRoundMoveAndFight(player);
     }
 
-    void performRoundTraining(@Nonnull final Player player) {
+    private void performRoundTraining(@Nonnull final Player player) {
         // Ask for what to train
         final Map<Class<? extends Warrior>, Integer> toBuild = players.get(player).getLeft().provideQueue();
 
@@ -72,10 +82,17 @@ public class GameLogic {
                         // Queue them
                 ).forEach(castle::queueWarriors);
 
-        // Train and spawn them later
+        // Train and spawn them
+        final List<Warrior> trained = castle.train();
+
+        boardLogic.spawn(
+                player.getSide() == Player.Side.LEFT ?
+                        0 : boardLogic.getBoard().getSettings().getSize() - 1,
+                trained
+        );
     }
 
-    boolean performRoundMoveAndFight(@Nonnull final Player player) {
+    private boolean performRoundMoveAndFight(@Nonnull final Player player) {
         // If left player
         if (player.getSide() == Player.Side.LEFT) {
 
@@ -86,7 +103,7 @@ public class GameLogic {
                     return true;
             }
 
-        // If right player
+            // If right player
         } else {
 
             for (int i = boardLogic.getBoard().getSettings().getSize() - 1; i > 0; --i) {
@@ -103,13 +120,13 @@ public class GameLogic {
     private boolean performRoundMoveAndFightLogic(@Nonnull final Player player,
                                                   @Nonnull final BoardCell cell) {
         // If enemies on target cell
-        if (cell.countEnnemis(player) != 0) {
+        if (cell.countEnemies(player.getSide()) != 0) {
             new FightLogic(cell).fight(player);
         }
 
         // No enemy and cell is last cell = victory
-        return cell.countEnnemis(player) == 0
-                && cell.getPosition() == boardLogic.getBoard().getSettings().getSize() - 1;
+        return cell.countEnemies(player.getSide()) == 0
+                && cell.getPosition() == (player.getSide() == Player.Side.RIGHT ? boardLogic.getBoard().getSettings().getSize() - 1 : 0);
     }
 
     public class FightLogic {

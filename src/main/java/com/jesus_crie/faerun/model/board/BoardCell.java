@@ -25,6 +25,17 @@ public class BoardCell {
         return warriors;
     }
 
+    public Player.Side getSide() {
+        if (getWarriors().size() == 0)
+            return Player.Side.EMPTY;
+        else if (getWarriors().size() == countAllies(Player.Side.RIGHT))
+            return Player.Side.RIGHT;
+        else if (getWarriors().size() == countAllies(Player.Side.LEFT))
+            return Player.Side.LEFT;
+        else
+            return Player.Side.BOTH;
+    }
+
     public void addWarriors(@Nonnull final Warrior... ws) {
         addWarriors(Arrays.asList(ws));
     }
@@ -49,13 +60,15 @@ public class BoardCell {
         return warriors.size();
     }
 
-    public int countAllies(@Nonnull final Player owner) {
+    public int countAllies(@Nonnull final Player.Side owner) {
         return (int) warriors.stream()
-                .filter(w -> w.getOwner().equals(owner))
+                .filter(w -> w.getOwner().getSide() == owner)
                 .count();
     }
 
-    public int countEnnemis(@Nonnull final Player owner) {
-        return warriors.size() - countAllies(owner);
+    public int countEnemies(@Nonnull final Player.Side owner) {
+        return (int) warriors.stream()
+                .filter(w -> w.getOwner().getSide() != owner)
+                .count();
     }
 }
