@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class BoardLogic {
 
@@ -58,7 +59,7 @@ public class BoardLogic {
         board.getCell(position).removeWarriors(
                 board.getCell(position).getWarriors().stream()
                         .filter(warriorPredicate)
-                        .toArray(Warrior[]::new)
+                        .collect(Collectors.toList())
         );
     }
 

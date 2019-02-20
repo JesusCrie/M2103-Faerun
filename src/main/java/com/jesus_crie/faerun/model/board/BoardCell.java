@@ -44,8 +44,8 @@ public class BoardCell {
         warriors.addAll(ws);
     }
 
-    public void removeWarriors(@Nonnull final Warrior... ws) {
-        warriors.removeAll(Arrays.asList(ws));
+    public void removeWarriors(@Nonnull final List<Warrior> ws) {
+        warriors.removeAll(ws);
     }
 
     @Nonnull

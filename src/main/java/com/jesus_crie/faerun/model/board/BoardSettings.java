@@ -6,12 +6,18 @@ public class BoardSettings {
     private final int baseCost;
     private final int diceAmount;
     private final int initialResources;
+    private final int resourcesPerRound;
 
-    public BoardSettings(int size, int baseCost, int diceAmount, int initialResources) {
+    public BoardSettings(final int size,
+                         final int baseCost,
+                         final int diceAmount,
+                         final int initialResources,
+                         final int resourcesPerRound) {
         this.size = size;
         this.baseCost = baseCost;
         this.diceAmount = diceAmount;
         this.initialResources = initialResources;
+        this.resourcesPerRound = resourcesPerRound;
     }
 
     public int getSize() {
@@ -30,9 +36,13 @@ public class BoardSettings {
         return initialResources;
     }
 
+    public int getResourcesPerRound() {
+        return resourcesPerRound;
+    }
+
     @Override
     public String toString() {
-        return String.format("BoardSettings[size: %d, baseCost: %d, diceAmount: %d, initialResources: %d]",
-                getSize(), getBaseCost(), getDiceAmount(), getInitialResources());
+        return String.format("BoardSettings[size: %d, baseCost: %d, diceAmount: %d, initialResources: %d, resourcesPerRound: %d]",
+                getSize(), getBaseCost(), getDiceAmount(), getInitialResources(), getResourcesPerRound());
     }
 }

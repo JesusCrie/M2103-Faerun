@@ -4,19 +4,22 @@ import com.jesus_crie.faerun.model.Player;
 import com.jesus_crie.faerun.model.board.Board;
 import com.jesus_crie.faerun.model.board.BoardCell;
 import com.jesus_crie.faerun.model.board.BoardSettings;
+import com.jesus_crie.faerun.model.board.Castle;
 import com.jesus_crie.faerun.model.warrior.*;
 
 import javax.annotation.Nonnull;
 import java.io.PrintStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
-public class ConsoleHandler implements InputHandler, OutputHandler, FightOutputHandler {
+public class ConsoleHandler implements InputHandler, OutputHandler {
 
     private final Scanner in = new Scanner(System.in);
     private final PrintStream out = System.out;
+    private final FightOutputHandler fightHandler;
+
+    public ConsoleHandler(@Nonnull final FightOutputHandler fightHandler) {
+        this.fightHandler = fightHandler;
+    }
 
     /*
      *      InputHandler
@@ -37,7 +40,7 @@ public class ConsoleHandler implements InputHandler, OutputHandler, FightOutputH
     public BoardSettings provideSettings() {
         // TODO ask settings
         // Return an arbitrary setting for now
-        return new BoardSettings(10, 1, 3, 5);
+        return new BoardSettings(10, 1, 3, 5, 1);
     }
 
     @Override
@@ -47,24 +50,32 @@ public class ConsoleHandler implements InputHandler, OutputHandler, FightOutputH
         out.println("TRAINING TIME !");
 
         out.print("How many dwarfs ? ");
-        int am = in.nextInt();
+        int am = askInt();
         if (am > 0) map.put(Dwarf.class, am);
 
         out.print("How many dwarf chiefs ? ");
-        am = in.nextInt();
+        am = askInt();
         if (am > 0) map.put(DwarfChief.class, am);
 
         out.print("How many elves ? ");
-        am = in.nextInt();
+        am = askInt();
         if (am > 0) map.put(Elf.class, am);
 
         out.print("How many elf chiefs ? ");
-        am = in.nextInt();
+        am = askInt();
         if (am > 0) map.put(ElfChief.class, am);
 
         out.println("TRAINING PROMPT DONE\n");
 
         return map;
+    }
+
+    private int askInt() {
+        try {
+            return in.nextInt();
+        } catch (InputMismatchException e) {
+            return 0;
+        }
     }
 
     /*
@@ -73,7 +84,7 @@ public class ConsoleHandler implements InputHandler, OutputHandler, FightOutputH
 
     @Override
     public FightOutputHandler getFightOutputHandler() {
-        return this;
+        return fightHandler;
     }
 
     @Override
@@ -97,9 +108,9 @@ public class ConsoleHandler implements InputHandler, OutputHandler, FightOutputH
             else if (cell.getSide() == Player.Side.RIGHT) ++amountRight;
         }
 
-        out.printf("Left %f%% || %f%% Right\n",
-                amountLeft / (float) board.getSettings().getSize(),
-                amountRight / (float) board.getSettings().getSize());
+        out.printf("Left %d%% || %d%% Right\n",
+                (int) (amountLeft / (float) board.getSettings().getSize()) * 100,
+                (int) (amountRight / (float) board.getSettings().getSize()) * 100);
     }
 
     @Override
@@ -128,44 +139,56 @@ public class ConsoleHandler implements InputHandler, OutputHandler, FightOutputH
         out.println(" Castle RIGHT");
     }
 
-    /*
-     *      FightOutputHandler
-     */
-
     @Override
-    public void displayLogStart(@Nonnull final BoardCell cell) {
-        out.println("-- Fight in cell " + cell.getPosition() + " --");
-    }
-
-    @Override
-    public void displayLogEnd(@Nonnull final BoardCell cell) {
-        out.println("-- Fight ended --");
-    }
-
-    @Override
-    public void displayWarriors(@Nonnull final List<Warrior> left, @Nonnull final List<Warrior> right) {
-        printWarriors(left);
-        out.println("VS");
-        printWarriors(right);
-    }
-
-    private void printWarriors(List<Warrior> ws) {
-        for (int i = 0; i < ws.size(); i++) {
-            final Warrior warrior = ws.get(i);
-            out.printf("#%d %s [%d HP] ", i, warrior.getClass().getSimpleName(), warrior.getHealth());
-        }
+    public void displayCastleState(@Nonnull final Castle castle) {
+        out.println("Available resources: " + castle.getResources());
+        out.println("Queued warriors:");
+        for (Warrior w : castle.getTrainingQueue())
+            out.printf(" - %s\n", w.getClass().getSimpleName());
         out.println();
     }
 
-    @Override
-    public void displayLogHit(@Nonnull final Warrior attacker, @Nonnull final Warrior defender, final int damage) {
-        out.printf("%s ⚔️ %s -%dHP\n",
-                attacker.getClass().getSimpleName(), defender.getClass().getSimpleName(), damage);
-    }
+    public static class ConsoleFightOutputHandler implements FightOutputHandler {
 
-    @Override
-    public void displayLogDead(@Nonnull final Warrior warrior) {
-        out.printf("[%s] A %s just died, RIP\n",
-                warrior.getOwner().getSide(), warrior.getClass().getSimpleName());
+        private final PrintStream out = System.out;
+
+        @Override
+        public void displayLogStart(@Nonnull final BoardCell cell) {
+            out.println("-- Fight in cell " + cell.getPosition() + " --");
+        }
+
+        @Override
+        public void displayLogEnd(@Nonnull final BoardCell cell) {
+            out.println("-- Fight ended --");
+            out.println();
+        }
+
+        @Override
+        public void displayWarriors(@Nonnull final List<Warrior> left, @Nonnull final List<Warrior> right) {
+            printWarriors(left);
+            out.println("VS");
+            printWarriors(right);
+            out.println();
+        }
+
+        private void printWarriors(List<Warrior> ws) {
+            for (int i = 0; i < ws.size(); i++) {
+                final Warrior warrior = ws.get(i);
+                out.printf("#%d %s [%d HP] ", i, warrior.getClass().getSimpleName(), warrior.getHealth());
+            }
+            out.println();
+        }
+
+        @Override
+        public void displayLogHit(@Nonnull final Warrior attacker, @Nonnull final Warrior defender, final int damage) {
+            out.printf("%s ⚔️ %s -%dHP\n",
+                    attacker.getClass().getSimpleName(), defender.getClass().getSimpleName(), damage);
+        }
+
+        @Override
+        public void displayLogDead(@Nonnull final Warrior warrior) {
+            out.printf("[%s] A %s just died, RIP\n",
+                    warrior.getOwner().getSide(), warrior.getClass().getSimpleName());
+        }
     }
 }

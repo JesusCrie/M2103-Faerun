@@ -4,9 +4,7 @@ import com.jesus_crie.faerun.model.Player;
 import com.jesus_crie.faerun.model.warrior.Warrior;
 
 import javax.annotation.Nonnull;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 public class Castle {
 
@@ -30,6 +28,10 @@ public class Castle {
 
     public int getResources() {
         return resources;
+    }
+
+    public Collection<Warrior> getTrainingQueue() {
+        return Collections.unmodifiableCollection(trainingQueue);
     }
 
     public void addResources(final int amount) {

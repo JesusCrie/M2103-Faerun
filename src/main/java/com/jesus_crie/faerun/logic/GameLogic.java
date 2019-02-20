@@ -4,7 +4,6 @@ import com.jesus_crie.faerun.iohandler.FightOutputHandler;
 import com.jesus_crie.faerun.iohandler.InputHandler;
 import com.jesus_crie.faerun.iohandler.OutputHandler;
 import com.jesus_crie.faerun.model.Player;
-import com.jesus_crie.faerun.model.board.Board;
 import com.jesus_crie.faerun.model.board.BoardCell;
 import com.jesus_crie.faerun.model.board.BoardSettings;
 import com.jesus_crie.faerun.model.board.Castle;
@@ -42,7 +41,7 @@ public class GameLogic {
         final Player[] players = this.players.keySet().toArray(new Player[2]);
 
         // Index current player
-        byte i = 0;
+        byte i = -1;
         // Current player
         Player current;
         // For each player, until victory
@@ -61,16 +60,23 @@ public class GameLogic {
 
     private boolean performPlayerRound(@Nonnull final Player player) {
         performRoundTraining(player);
+        performRoundMoveAndFight(player);
+        performRoundSpawn(player);
+
         players.get(player).getRight().displayBoardProgression(boardLogic.getBoard());
         players.get(player).getRight().displayBoard(boardLogic.getBoard());
-        return performRoundMoveAndFight(player);
+
+        return hasWon(player.getSide());
     }
 
     private void performRoundTraining(@Nonnull final Player player) {
-        // Ask for what to train
-        final Map<Class<? extends Warrior>, Integer> toBuild = players.get(player).getLeft().provideQueue();
-
+        // Castle resources
         final Castle castle = boardLogic.getBoard().getCastle(player);
+        castle.addResources(boardLogic.getBoard().getSettings().getResourcesPerRound());
+
+        // Ask for what to train
+        players.get(player).getRight().displayCastleState(castle);
+        final Map<Class<? extends Warrior>, Integer> toBuild = players.get(player).getLeft().provideQueue();
 
         // Process these
         toBuild.entrySet().stream()
@@ -81,9 +87,11 @@ public class GameLogic {
                         ArrayList::addAll
                         // Queue them
                 ).forEach(castle::queueWarriors);
+    }
 
+    private void performRoundSpawn(@Nonnull final Player player) {
         // Train and spawn them
-        final List<Warrior> trained = castle.train();
+        final List<Warrior> trained = boardLogic.getBoard().getCastle(player).train();
 
         boardLogic.spawn(
                 player.getSide() == Player.Side.LEFT ?
@@ -92,49 +100,84 @@ public class GameLogic {
         );
     }
 
-    private boolean performRoundMoveAndFight(@Nonnull final Player player) {
-        // If left player
-        if (player.getSide() == Player.Side.LEFT) {
+    private void performRoundMoveAndFight(@Nonnull final Player player) {
+        // If right player
+        if (player.getSide() == Player.Side.RIGHT) {
 
-            for (int i = 0; i < boardLogic.getBoard().getSettings().getSize() - 1; ++i) {
-                final BoardCell targetCell = boardLogic.getBoard().getCell(i + 1);
+            for (int i = 0; i < boardLogic.getBoard().getSettings().getSize(); i++) {
+                final BoardCell origin = boardLogic.getBoard().getCell(i);
 
-                if (performRoundMoveAndFightLogic(player, targetCell))
-                    return true;
+                // If allies on cell
+                if (origin.countAllies(player.getSide()) != 0) {
+                    final BoardCell target = boardLogic.getBoard().getCell(Math.max(i - 1, 0));
+
+                    performRoundMoveAndFightLogic(player, origin, target);
+                }
             }
 
-            // If right player
-        } else {
+        } else { // If left player
 
-            for (int i = boardLogic.getBoard().getSettings().getSize() - 1; i > 0; --i) {
-                final BoardCell targetCell = boardLogic.getBoard().getCell(i - 1);
+            for (int i = boardLogic.getBoard().getSettings().getSize() - 1; i >= 0; i--) {
+                final BoardCell origin = boardLogic.getBoard().getCell(i);
 
-                if (performRoundMoveAndFightLogic(player, targetCell))
-                    return true;
+                // If allies on cell
+                if (origin.countAllies(player.getSide()) != 0) {
+                    final BoardCell target = boardLogic.getBoard().getCell(
+                            Math.min(i + 1, boardLogic.getBoard().getSettings().getSize() - 1)
+                    );
+
+                    performRoundMoveAndFightLogic(player, origin, target);
+                }
             }
         }
-
-        return false;
     }
 
-    private boolean performRoundMoveAndFightLogic(@Nonnull final Player player,
-                                                  @Nonnull final BoardCell cell) {
-        // If enemies on target cell
-        if (cell.countEnemies(player.getSide()) != 0) {
-            new FightLogic(cell).fight(player);
-        }
+    private void performRoundMoveAndFightLogic(@Nonnull final Player player,
+                                               @Nonnull final BoardCell origin,
+                                               @Nonnull final BoardCell target) {
+        // If enemies on origin cell, fight
+        if (origin.countEnemies(player.getSide()) != 0) {
+            final FightLogic fight = new FightLogic(origin);
+            fight.fight(player);
 
-        // No enemy and cell is last cell = victory
-        return cell.countEnemies(player.getSide()) == 0
-                && cell.getPosition() == (player.getSide() == Player.Side.RIGHT ? boardLogic.getBoard().getSettings().getSize() - 1 : 0);
+            // Replace everyone
+            origin.removeWarriors(fight.getDeadWarriors());
+
+        } else { // If nobody, move
+            // If not the same cell (happen when fight in the last cell
+            if (origin.getPosition() != target.getPosition())
+                boardLogic.move(origin.getPosition(), target.getPosition());
+
+            // If enemies on target cell, fight
+            if (target.countEnemies(player.getSide()) != 0) {
+                new FightLogic(target).fight(player);
+            }
+        }
+    }
+
+    private boolean hasWon(@Nonnull final Player.Side side) {
+        // Get opposite cell depending on side
+        final BoardCell target;
+        if (side == Player.Side.RIGHT)
+            target = boardLogic.getBoard().getCell(0);
+        else
+            target = boardLogic.getBoard().getCell(boardLogic.getBoard().getSettings().getSize() - 1);
+
+        // If there are only allies in the cell = victory
+        return target.countEnemies(side) == 0 && target.countAllies(side) != 0;
     }
 
     public class FightLogic {
 
         private final BoardCell cell;
+        private final LinkedList<Warrior> deadWarriors = new LinkedList<>();
 
         public FightLogic(@Nonnull final BoardCell cell) {
             this.cell = cell;
+        }
+
+        public LinkedList<Warrior> getDeadWarriors() {
+            return deadWarriors;
         }
 
         public void fight(@Nonnull final Player attacker) {
@@ -161,10 +204,12 @@ public class GameLogic {
             attack(allies, enemies);
             // Defenders response
             attack(enemies, allies);
+
+            commonOutputHandler.displayLogEnd(cell);
         }
 
         @SuppressWarnings("ConstantConditions")
-        void attack(@Nonnull final Queue<Warrior> attackers, @Nonnull final Queue<Warrior> defenders) {
+        private void attack(@Nonnull final Queue<Warrior> attackers, @Nonnull final Queue<Warrior> defenders) {
             // For each attacker
             for (Warrior attacker : attackers) {
                 // Compute damages
@@ -180,6 +225,7 @@ public class GameLogic {
                     if (!defenders.peek().isAlive()) {
                         final Warrior dead = defenders.poll();
                         commonOutputHandler.displayLogDead(dead);
+                        deadWarriors.add(dead);
                     }
                 }
             }
@@ -211,7 +257,8 @@ public class GameLogic {
 
         @Override
         public void displayLogHit(@Nonnull final Warrior attacker, @Nonnull final Warrior defender, final int damage) {
-            for (FightOutputHandler handler : handlers) handler.displayLogHit(attacker, defender, damage);
+            for (FightOutputHandler handler : handlers)
+                handler.displayLogHit(attacker, defender, damage);
         }
 
         @Override
