@@ -1,5 +1,7 @@
 package com.jesus_crie.faerun.network;
 
+import com.jesus_crie.faerun.network.payload.NetPayload;
+
 import javax.annotation.Nonnull;
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -60,9 +62,10 @@ public class NetServerManager {
             if (opcode == NetPayload.Opcode.UNKNOWN)
                 throw new MalformedPayloadException("Unknown opcode: " + opcodeRaw);
 
+            // Read the length of the data
             short dataLen = fromClient.readShort();
 
-            // Read data
+            // Create buffer for the data and read it
             byte[] data = new byte[dataLen];
             int res = fromClient.read(data);
 
@@ -70,16 +73,18 @@ public class NetServerManager {
             if (res != dataLen)
                 throw new IllegalStateException("Something is wrong with the payload");
 
-            // Sanity check 3, check terminator
-            if (data[dataLen - 1] != TERMINATOR)
+            // Sanity check 3, the next byte should be the terminator
+            if (fromClient.readByte() != TERMINATOR)
                 throw new MalformedPayloadException("No newline at the end of the data !");
 
             // Rebuild payload
 
             // Need a constructor of the form XPayload(int len, byte[] data)
+            //noinspection unchecked
             final Constructor<T> constructor =
                     (Constructor<T>) opcode.getPayloadClass().getConstructor(byte[].class);
 
+            // Invoke the constructor
             return constructor.newInstance((Object) data);
 
         } catch (IOException e) {

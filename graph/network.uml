@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="408.0" y="0.0">com.jesus_crie.faerun.network.NetServerManager</node>
+    <node x="0.0" y="167.0">com.jesus_crie.faerun.network.NetPayload.Opcode</node>
+    <node x="74.0" y="0.0">com.jesus_crie.faerun.network.NetPayload</node>
+    <node x="0.0" y="654.0">com.jesus_crie.faerun.network.FaerunProtocol</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="com.jesus_crie.faerun.network.NetPayload.Opcode" target="com.jesus_crie.faerun.network.NetPayload">
+      <point x="0.0" y="-221.0" />
+      <point x="0.0" y="58.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="0.0" y="0.0" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Constructors</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+    <Category>Inner Classes</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

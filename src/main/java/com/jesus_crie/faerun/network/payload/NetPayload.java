@@ -1,13 +1,19 @@
-package com.jesus_crie.faerun.network;
+package com.jesus_crie.faerun.network.payload;
 
 import javax.annotation.Nonnull;
 
 public abstract class NetPayload {
 
+    /**
+     * Size of the reserved space at the beginning of the payload
+     * containing the metadata (header).
+     */
+    protected static final int OFFSET_RESERVED = 3;
+
     public enum Opcode {
-        ASK_USERNAME(0x01, NetPayload.class),
-        ASK_SETTINGS(0x02, NetPayload.class),
-        ASK_QUEUE(0x03, NetPayload.class),
+        ASK_USERNAME(0x01, AskUsernamePayload.class),
+        ASK_SETTINGS(0x02, AskSettingsPayload.class),
+        ASK_QUEUE(0x03, AskQueuePayload.class),
 
         SHOW_NEW_ROUND(0x11, NetPayload.class),
         SHOW_CASTLE(0x12, NetPayload.class),
@@ -52,4 +58,23 @@ public abstract class NetPayload {
     }
 
     public abstract byte[] serialize();
+
+    /**
+     * Prepare a buffer and write the header in the reserved space at the
+     * beginning.
+     * @param dataLen - The size of the data that will fill the buffer.
+     * @return The buffer of the correct size and the header filled.
+     */
+    protected final byte[] prepareBuffer(final int dataLen) {
+        final byte[] data = new byte[OFFSET_RESERVED + dataLen];
+
+        // Write opcode
+        data[0] = (byte) opcode.getOpcode();
+
+        // According to DataInputStream#readShort() we write the higher byte first
+        data[1] = (byte) (dataLen >> 8);
+        data[2] = (byte) dataLen;
+
+        return data;
+    }
 }
