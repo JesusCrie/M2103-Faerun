@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="0.0" y="599.0">com.jesus_crie.faerun.logic.BoardLogic</node>
+    <node x="26.5" y="383.0">com.jesus_crie.faerun.logic.GameLogic.FightLogic</node>
+    <node x="0.0" y="0.0">com.jesus_crie.faerun.logic.GameLogic</node>
+    <node x="562.0" y="599.0">com.jesus_crie.faerun.iohandler.OutputHandler</node>
+    <node x="0.0" y="923.0">com.jesus_crie.faerun.iohandler.InputHandler</node>
+    <node x="267.5" y="329.0">com.jesus_crie.faerun.logic.GameLogic.CommonOutputHandler</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="com.jesus_crie.faerun.logic.GameLogic.CommonOutputHandler" target="com.jesus_crie.faerun.logic.GameLogic">
+      <point x="0.0" y="-112.5" />
+      <point x="477.0" y="304.0" />
+      <point x="460.5" y="304.0" />
+      <point x="153.5" y="139.5" />
+    </edge>
+    <edge source="com.jesus_crie.faerun.logic.GameLogic.FightLogic" target="com.jesus_crie.faerun.logic.GameLogic">
+      <point x="0.0" y="-58.5" />
+      <point x="137.0" y="304.0" />
+      <point x="153.5" y="304.0" />
+      <point x="-153.5" y="139.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="32.5" y="300.0" />
+  <SelectedNodes>
+    <node>com.jesus_crie.faerun.iohandler.OutputHandler</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Constructors</Category>
+    <Category>Methods</Category>
+    <Category>Inner Classes</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
