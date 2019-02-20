@@ -68,7 +68,7 @@ public class ConsoleHandler implements InputHandler, OutputHandler {
 
         out.print("How many dwarf chiefs ? ");
         am = askInt();
-        if (am > 0) map.put(DwarfChief.class, am);
+        if (am > 0) map.put(DwarfLeader.class, am);
 
         out.print("How many elves ? ");
         am = askInt();
@@ -76,7 +76,7 @@ public class ConsoleHandler implements InputHandler, OutputHandler {
 
         out.print("How many elf chiefs ? ");
         am = askInt();
-        if (am > 0) map.put(ElfChief.class, am);
+        if (am > 0) map.put(ElfLeader.class, am);
 
         out.println("TRAINING PROMPT DONE\n");
 

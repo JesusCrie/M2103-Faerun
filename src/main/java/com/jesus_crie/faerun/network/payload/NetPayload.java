@@ -1,5 +1,7 @@
 package com.jesus_crie.faerun.network.payload;
 
+import com.jesus_crie.faerun.model.Player;
+
 import javax.annotation.Nonnull;
 
 public abstract class NetPayload {
@@ -15,14 +17,14 @@ public abstract class NetPayload {
         ASK_SETTINGS(0x02, AskSettingsPayload.class),
         ASK_QUEUE(0x03, AskQueuePayload.class),
 
-        SHOW_NEW_ROUND(0x11, NetPayload.class),
-        SHOW_CASTLE(0x12, NetPayload.class),
-        SHOW_SETTINGS(0x13, NetPayload.class),
+        SHOW_NEW_ROUND(0x11, ShowNewRoundPayload.class),
+        SHOW_CASTLE(0x12, ShowCastlePayload.class),
+        SHOW_SETTINGS(0x13, ShowSettingsPayload.class),
 
-        SHOW_FIGHT_START(0x21, NetPayload.class),
-        SHOW_FIGHT_END(0x22, NetPayload.class),
-        SHOW_FIGHT_HIT(0x23, NetPayload.class),
-        SHOW_FIGHT_DEAD(0x24, NetPayload.class),
+        SHOW_FIGHT_START(0x21, ShowFightStartPayload.class),
+        SHOW_FIGHT_END(0x22, ShowFightEndPayload.class),
+        SHOW_FIGHT_HIT(0x23, ShowFightHitPayload.class),
+        SHOW_FIGHT_DEAD(0x24, ShowFightDeadPayload.class),
 
         UNKNOWN(0xff, NetPayload.class);
 
@@ -62,6 +64,7 @@ public abstract class NetPayload {
     /**
      * Prepare a buffer and write the header in the reserved space at the
      * beginning.
+     *
      * @param dataLen - The size of the data that will fill the buffer.
      * @return The buffer of the correct size and the header filled.
      */

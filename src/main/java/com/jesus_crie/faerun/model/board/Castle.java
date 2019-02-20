@@ -30,6 +30,10 @@ public class Castle {
         return resources;
     }
 
+    public int getBaseCost() {
+        return baseCost;
+    }
+
     public Collection<Warrior> getTrainingQueue() {
         return Collections.unmodifiableCollection(trainingQueue);
     }

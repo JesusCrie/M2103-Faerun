@@ -4,9 +4,9 @@ import com.jesus_crie.faerun.model.Player;
 
 import javax.annotation.Nonnull;
 
-public class DwarfChief extends Dwarf {
+public class DwarfLeader extends Dwarf {
 
-    public DwarfChief(@Nonnull final Player player) {
+    public DwarfLeader(@Nonnull final Player player) {
         super(player);
     }
 

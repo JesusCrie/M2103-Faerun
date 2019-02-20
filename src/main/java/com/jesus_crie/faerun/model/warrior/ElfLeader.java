@@ -4,9 +4,9 @@ import com.jesus_crie.faerun.model.Player;
 
 import javax.annotation.Nonnull;
 
-public class ElfChief extends Elf {
+public class ElfLeader extends Elf {
 
-    public ElfChief(@Nonnull final Player player) {
+    public ElfLeader(@Nonnull final Player player) {
         super(player);
         strength *= 2;
     }
