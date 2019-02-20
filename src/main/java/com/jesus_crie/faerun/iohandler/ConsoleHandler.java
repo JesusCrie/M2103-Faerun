@@ -26,21 +26,34 @@ public class ConsoleHandler implements InputHandler, OutputHandler {
      */
 
     @Override
-    public Player[] providePlayers() {
-        // TODO net players
-        // Return 2 arbitrary players for now
+    public boolean provideGamemode() {
+        final String g = in.nextLine();
 
-        return new Player[]{
-                new Player("Lucas", Player.Side.RIGHT),
-                new Player("Jojo", Player.Side.LEFT)
-        };
+        // Default to local if not remote
+        return g.startsWith("r");
+    }
+
+    @Override
+    public String provideUsername() {
+        String rawName = in.nextLine();
+        rawName = rawName.replaceAll("\\s", "_")
+                .replaceAll("[^a-zA-Z0-9]", "");
+
+        return rawName;
+    }
+
+    @Override
+    public void displayPromptSettings() {
+        out.print("Enter settings in this order: size, baseCost, diceAmount, initResources, resources/round: ");
     }
 
     @Override
     public BoardSettings provideSettings() {
-        // TODO ask settings
-        // Return an arbitrary setting for now
-        return new BoardSettings(10, 1, 3, 5, 1);
+        return new BoardSettings(askInt(10),
+                askInt(1),
+                askInt(3),
+                askInt(5),
+                askInt(1));
     }
 
     @Override
@@ -71,10 +84,14 @@ public class ConsoleHandler implements InputHandler, OutputHandler {
     }
 
     private int askInt() {
+        return askInt(0);
+    }
+
+    private int askInt(final int defaultValue) {
         try {
-            return in.nextInt();
-        } catch (InputMismatchException e) {
-            return 0;
+            return Integer.valueOf(in.nextLine());
+        } catch (NumberFormatException e) {
+            return defaultValue;
         }
     }
 
@@ -85,6 +102,21 @@ public class ConsoleHandler implements InputHandler, OutputHandler {
     @Override
     public FightOutputHandler getFightOutputHandler() {
         return fightHandler;
+    }
+
+    @Override
+    public void displayWelcome() {
+        out.println("Welcome to Faerun battle !");
+    }
+
+    @Override
+    public void displayPromptGameMode() {
+        out.print("Do you want to play in local or remotely ? [L/r] ");
+    }
+
+    @Override
+    public void displayPromptUsername() {
+        out.print("Choose your username: ");
     }
 
     @Override

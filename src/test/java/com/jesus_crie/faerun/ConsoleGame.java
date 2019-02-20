@@ -12,7 +12,7 @@ import com.jesus_crie.faerun.utils.Pair;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainTest {
+public class ConsoleGame {
 
     public static void main(String[] args) {
         final ConsoleHandler handler1 = new ConsoleHandler(new ConsoleHandler.ConsoleFightOutputHandler());
@@ -20,10 +20,15 @@ public class MainTest {
 
         final Map<Player, Pair<InputHandler, OutputHandler>> gameMeta = new HashMap<>();
 
-        final Player[] players = handler1.providePlayers();
-        gameMeta.put(players[0], Pair.of(handler1, handler1));
-        gameMeta.put(players[1], Pair.of(handler2, handler2));
+        handler1.displayPromptUsername();
+        final Player p1 = new Player(handler1.provideUsername(), Player.Side.LEFT);
+        handler2.displayPromptUsername();
+        final Player p2 = new Player(handler2.provideUsername(), Player.Side.RIGHT);
 
+        gameMeta.put(p1, Pair.of(handler1, handler1));
+        gameMeta.put(p2, Pair.of(handler2, handler2));
+
+        handler1.displayPromptSettings();
         final BoardSettings settings = handler1.provideSettings();
 
         final GameLogic game = new GameLogic(gameMeta, settings);

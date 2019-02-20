@@ -11,6 +11,14 @@ public interface OutputHandler {
 
     FightOutputHandler getFightOutputHandler();
 
+    void displayWelcome();
+
+    void displayPromptGameMode();
+
+    void displayPromptUsername();
+
+    void displayPromptSettings();
+
     void displayNewRound(@Nonnull final Player player, final int roundNumber);
 
     void displayBoardSettings(@Nonnull final BoardSettings settings);
