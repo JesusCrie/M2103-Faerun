@@ -1,5 +1,7 @@
 package com.jesus_crie.faerun.network.payload;
 
+import com.jesus_crie.faerun.network.NetDeSerializer;
+
 import javax.annotation.Nonnull;
 
 public abstract class NetPayload {
@@ -72,9 +74,8 @@ public abstract class NetPayload {
         // Write opcode
         data[0] = (byte) opcode.getOpcode();
 
-        // According to DataInputStream#readShort() we write the higher byte first
-        data[1] = (byte) (dataLen >> 8);
-        data[2] = (byte) dataLen;
+        // Write length
+        NetDeSerializer.destructureShort(data, 1, (short) dataLen);
 
         return data;
     }

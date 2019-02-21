@@ -9,19 +9,12 @@ import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.ServerSocket;
-import java.net.Socket;
 
-public class NetServerManager {
-
-    private static final byte TERMINATOR = '\n';
+public class ServerNetHandler extends NetHandler {
 
     private final ServerSocket server;
-    private Socket client;
 
-    private PrintStream toClient;
-    private DataInputStream fromClient;
-
-    public NetServerManager() throws IOException {
+    public ServerNetHandler() throws IOException {
         server = new ServerSocket(0);
     }
 
@@ -37,6 +30,7 @@ public class NetServerManager {
         }
     }
 
+    @Override
     public boolean sendPayload(@Nonnull final NetPayload payload) {
         checkOrThrow();
 
@@ -50,7 +44,8 @@ public class NetServerManager {
     }
 
     @Nonnull
-    public <T extends NetPayload> T receivePayload() {
+    @Override
+    public NetPayload receivePayload() {
         checkOrThrow();
 
         try {
@@ -80,9 +75,8 @@ public class NetServerManager {
             // Rebuild payload
 
             // Need a constructor of the form XPayload(int len, byte[] data)
-            //noinspection unchecked
-            final Constructor<T> constructor =
-                    (Constructor<T>) opcode.getPayloadClass().getConstructor(byte[].class);
+            final Constructor<? extends NetPayload> constructor =
+                    opcode.getPayloadClass().getConstructor(byte[].class);
 
             // Invoke the constructor
             return constructor.newInstance((Object) data);
