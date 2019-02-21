@@ -1,6 +1,9 @@
 package com.jesus_crie.faerun.network;
 
+import com.jesus_crie.faerun.logic.BoardLogic;
 import com.jesus_crie.faerun.model.Player;
+import com.jesus_crie.faerun.model.board.Board;
+import com.jesus_crie.faerun.model.board.BoardSettings;
 import com.jesus_crie.faerun.model.board.Castle;
 import com.jesus_crie.faerun.model.warrior.*;
 
@@ -215,7 +218,7 @@ public class NetDeSerializer {
      * @param val - The value to test.
      * @return The size of the value serialized.
      */
-    public static int predictSizeSerializedWarriorCompany(@Nonnull final Warrior val) {
+    public static int predictSizeSerializedWarrior(@Nonnull final Warrior val) {
         return predictSizeSerializedPlayer(val.getOwner()) + 1 + LEN_INT;
     }
 
@@ -478,6 +481,75 @@ public class NetDeSerializer {
                 offset = serializeWarriorType(data, offset, w);
             }
         }
+
+        return offset;
+    }
+
+    /**
+     * Predict the size of the settings once serialized.
+     *
+     * @param val - The value to test.
+     * @return The size of the value serialized.
+     */
+    public static int predictSizeSerializedSettings(@Nonnull final BoardSettings val) {
+        return LEN_SHORT * 5;
+    }
+
+    /**
+     * Deserialize the settings from raw bytes.
+     *
+     * @param data   - The data to read from.
+     * @param offset - The offset in the data where we will read.
+     * @return The rebuilt settings.
+     */
+    @Nonnull
+    public static BoardSettings deserializeSettings(final byte[] data, int offset) {
+        // Read size
+        final short size = rebuildShort(data, offset);
+        offset += LEN_SHORT;
+
+        // Read base cost
+        final short baseCost = rebuildShort(data, offset);
+        offset += LEN_SHORT;
+
+        // Read diceAmount
+        final short diceAmount = rebuildShort(data, offset);
+        offset += LEN_SHORT;
+
+        // Read initialResources
+        final short initialResources = rebuildShort(data, offset);
+        offset += LEN_SHORT;
+
+        // Read resources/round
+        final short resourcesPerRound = rebuildShort(data, offset);
+        offset += LEN_SHORT;
+
+        return new BoardSettings(size, baseCost, diceAmount, initialResources, resourcesPerRound);
+    }
+
+    /**
+     * Serialize the settings by writing his fields into the data.
+     *
+     * @param data   - The data to write to.
+     * @param offset - The offset in the data where we will write.
+     * @param value  - The value to write.
+     * @return The offset to the end of the thing.
+     */
+    public static int serializeSettings(final byte[] data, int offset, @Nonnull final BoardSettings value) {
+        // Write size
+        offset += value.getSize();
+
+        // Write base cost
+        offset += value.getBaseCost();
+
+        // Write diceAmount
+        offset += value.getDiceAmount();
+
+        // Write initialResources
+        offset += value.getInitialResources();
+
+        // Write ressources/round
+        offset += value.getResourcesPerRound();
 
         return offset;
     }

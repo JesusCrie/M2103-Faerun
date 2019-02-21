@@ -8,7 +8,11 @@ import javax.annotation.Nonnull;
  */
 public class AskSettingsPayload extends EmptyPayload {
 
-    public AskSettingsPayload(@Nonnull final byte[] data) {
+    public AskSettingsPayload() {
         super(Opcode.ASK_SETTINGS);
+    }
+
+    public AskSettingsPayload(@Nonnull final byte[] data) {
+        this();
     }
 }

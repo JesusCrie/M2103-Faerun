@@ -1,7 +1,5 @@
 package com.jesus_crie.faerun.network.payload;
 
-import com.jesus_crie.faerun.model.Player;
-
 import javax.annotation.Nonnull;
 
 public abstract class NetPayload {

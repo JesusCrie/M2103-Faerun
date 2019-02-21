@@ -8,7 +8,11 @@ import javax.annotation.Nonnull;
  */
 public class AskQueuePayload extends EmptyPayload {
 
-    public AskQueuePayload(@Nonnull final byte[] data) {
+    public AskQueuePayload() {
         super(Opcode.ASK_QUEUE);
+    }
+
+    public AskQueuePayload(@Nonnull final byte[] data) {
+        this();
     }
 }

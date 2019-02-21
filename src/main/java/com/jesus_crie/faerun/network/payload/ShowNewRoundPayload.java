@@ -2,6 +2,10 @@ package com.jesus_crie.faerun.network.payload;
 
 import com.jesus_crie.faerun.network.NetDeSerializer;
 
+/**
+ * Send the current round index to the remote client and ask to
+ * show it.
+ */
 public class ShowNewRoundPayload extends NetPayload {
 
     private final int round;
@@ -13,7 +17,7 @@ public class ShowNewRoundPayload extends NetPayload {
 
     public ShowNewRoundPayload(final byte[] data) {
         super(Opcode.SHOW_NEW_ROUND);
-        round = NetDeSerializer.rebuildInt(data, 0);
+        round = NetDeSerializer.rebuildInt(data, OFFSET_RESERVED);
     }
 
     @Override

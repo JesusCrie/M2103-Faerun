@@ -7,7 +7,11 @@ import javax.annotation.Nonnull;
  */
 public class AskUsernamePayload extends EmptyPayload {
 
-    public AskUsernamePayload(@Nonnull final byte[] data) {
+    public AskUsernamePayload() {
         super(Opcode.ASK_USERNAME);
+    }
+
+    public AskUsernamePayload(@Nonnull final byte[] data) {
+        this();
     }
 }
