@@ -38,6 +38,7 @@ public abstract class Warrior {
 
     /**
      * Set the health of this warrior, can't be negative.
+     *
      * @param health - The wanted health.
      */
     public void setHealth(int health) {
@@ -52,12 +53,16 @@ public abstract class Warrior {
     }
 
     /**
-     * @return The training cost of this unit.
+     * Get the training cost factor if the unit, will be multiplied by the base cost
+     * of the castle.
+     *
+     * @return The training cost factor of this unit.
      */
-    public abstract int getCost();
+    public abstract int getCostFactor();
 
     /**
      * Take damage, some warriors may override this method.
+     *
      * @param damage - The damage to apply.
      */
     public void takeDamage(final int damage) {

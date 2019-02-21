@@ -1,7 +1,7 @@
 package com.jesus_crie.faerun.network.payload;
 
 import com.jesus_crie.faerun.model.board.Castle;
-import com.jesus_crie.faerun.network.NetDestructuror;
+import com.jesus_crie.faerun.network.NetDeSerializer;
 
 import javax.annotation.Nonnull;
 
@@ -16,15 +16,15 @@ public class ShowCastlePayload extends NetPayload {
 
     public ShowCastlePayload(final byte[] data) {
         super(Opcode.SHOW_CASTLE);
-        castle = NetDestructuror.rebuildCastle(data, 0);
+        castle = NetDeSerializer.deserializeCastle(data, 0);
     }
 
     @Override
     public byte[] serialize() {
         final byte[] data = prepareBuffer(
-                NetDestructuror.predictSizeDestructuredCastle(castle));
+                NetDeSerializer.predictSizeSerializedCastle(castle));
 
-        NetDestructuror.destructureCastle(data, OFFSET_RESERVED, castle);
+        NetDeSerializer.serializeCastle(data, OFFSET_RESERVED, castle);
 
         return data;
     }

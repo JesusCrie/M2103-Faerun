@@ -64,7 +64,7 @@ public class Castle {
     }
 
     private boolean trainSingle(@Nonnull final Warrior w) {
-        final int cost = baseCost * w.getCost();
+        final int cost = baseCost * w.getCostFactor();
 
         if (cost > resources)
             return false;

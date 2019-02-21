@@ -5,12 +5,14 @@ import com.jesus_crie.faerun.model.board.Castle;
 import com.jesus_crie.faerun.model.warrior.*;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Utility class that can destructure and restructure primitives and some objects
  * int byte arrays.
  */
-public class NetDestructuror {
+public class NetDeSerializer {
 
     public static final int LEN_SHORT = 2;
     public static final int LEN_INT = 4;
@@ -106,27 +108,27 @@ public class NetDestructuror {
     }
 
     /**
-     * Predict the size of a string once destructured.
+     * Predict the size of a string once serialized.
      *
      * @param str - The value to test.
      * @return The size of the value destructured.
      */
-    public static int predictSizeDestructuredString(@Nonnull final String str) {
+    public static int predictSizeSerializedString(@Nonnull final String str) {
         return LEN_SHORT + str.length();
     }
 
     /**
-     * Restructure a string from the raw bytes.
+     * Deserialize a string from the raw bytes.
      *
      * @param data   - The data to read from.
      * @param offset - The offset in the data where we will read.
      * @return The string contained in the data.
      */
     @Nonnull
-    public static String rebuildString(final byte[] data, int offset) {
+    public static String deserializeString(final byte[] data, int offset) {
         // Read len
         final short len = rebuildShort(data, offset);
-        offset += 1;
+        offset += LEN_SHORT;
 
         // Read data
         final byte[] strData = new byte[len];
@@ -136,14 +138,14 @@ public class NetDestructuror {
     }
 
     /**
-     * Destructure a string by writing each byte into the data.
+     * Serialize a string by writing each byte into the data.
      *
      * @param data   - The data to write to.
      * @param offset - The offset in the data where we will write.
      * @param value  - The value to write.
      * @return The offset at the end of the writing.
      */
-    public static int destructureString(final byte[] data, int offset, @Nonnull final String value) {
+    public static int serializeString(final byte[] data, int offset, @Nonnull final String value) {
         // Length
         final short len = (short) value.length();
         destructureShort(data, offset, len);
@@ -158,88 +160,198 @@ public class NetDestructuror {
     }
 
     /**
-     * Predict the size of a Player once destructured.
+     * Predict the size of a Player once serialized.
      *
      * @param val - The value to test.
-     * @return The size of the value destructured.
+     * @return The size of the value serialized.
      */
-    public static int predictSizeDestructuredPlayer(@Nonnull final Player val) {
-        return 1 + predictSizeDestructuredString(val.getPseudo());
+    public static int predictSizeSerializedPlayer(@Nonnull final Player val) {
+        return 1 + predictSizeSerializedString(val.getPseudo());
     }
 
     /**
-     * Restructure a player from raw bytes.
+     * Deserialize a player from raw bytes.
      *
      * @param data   - The data to read from.
      * @param offset - The offset in the data where we will read.
      * @return The rebuilt player.
      */
-    public static Player rebuildPlayer(final byte[] data, int offset) {
+    public static Player deserializePlayer(final byte[] data, int offset) {
         // Read side
         final byte rawSide = data[offset];
         final Player.Side side = rawSide == 0 ? Player.Side.LEFT : Player.Side.RIGHT;
         offset += 1;
 
         // Read name
-        final String name = rebuildString(data, offset);
+        final String name = deserializeString(data, offset);
 
         return new Player(name, side);
     }
 
     /**
-     * Destructure a Player by writing his side and his username into the data.
+     * Serialize a Player by writing his side and his username into the data.
      *
      * @param data   - The data to write to.
      * @param offset - The offset in the data where we will write.
      * @param value  - The value to write.
      * @return The offset to the end of the thing.
      */
-    public static int destructurePlayer(final byte[] data, int offset, @Nonnull final Player value) {
+    public static int serializePlayer(final byte[] data, int offset, @Nonnull final Player value) {
         // Write side
         if (value.getSide() == Player.Side.LEFT)
             data[offset] = 0;
         else data[offset] = 1;
         offset += 1;
 
-        // Write name length
-        final short nameLen = (short) value.getPseudo().length();
-        destructureShort(data, offset, nameLen);
-        offset += LEN_SHORT;
-
         // Write name
-        final byte[] nameData = value.getPseudo().getBytes();
-        System.arraycopy(nameData, 0,
-                data, offset, nameLen);
-        offset += nameLen;
+        offset += serializeString(data, offset, value.getPseudo());
 
         return offset;
     }
 
-    public static int predictSizeDestructuredWarrior(@Nonnull final Warrior val) {
-        // TODO 2/20/19
-        return 0;
-    }
-
-    @Nonnull
-    public static Warrior rebuildWarrior(final byte[] data, int offset) {
-        // TODO 2/20/19
-        return null;
-    }
-
-    public static int destructureWarrior(final byte[] data, int offset, @Nonnull final Warrior value) {
-        // TODO 2/20/19
-        return 0;
+    /**
+     * Predict the size of a Warrior once serialized.
+     *
+     * @param val - The value to test.
+     * @return The size of the value serialized.
+     */
+    public static int predictSizeSerializedWarriorCompany(@Nonnull final Warrior val) {
+        return predictSizeSerializedPlayer(val.getOwner()) + 1 + LEN_INT;
     }
 
     /**
-     * Restructure a queued warrior from raw bytes.
+     * Deserialize a Warrior from raw bytes.
+     *
+     * @param data   - The data to read from.
+     * @param offset - The offset in the data where we will read.
+     * @param <T>    - The type of warrior to deserialize.
+     * @return The rebuilt Warrior.
+     */
+    @SuppressWarnings("unchecked")
+    @Nonnull
+    public static <T extends Warrior> T deserializeWarrior(final byte[] data, int offset) {
+        // Read owner
+        final Player owner = deserializePlayer(data, offset);
+        offset += predictSizeSerializedPlayer(owner);
+
+        // Read type and build object
+        final Warrior warrior = deserializeWarriorType(data, offset, owner);
+        offset += 1;
+
+        // Read health
+        final int health = rebuildInt(data, offset);
+        warrior.setHealth(health);
+
+        return (T) warrior;
+    }
+
+    /**
+     * Serialize a Warrior by writing his type, health and owner into the data.
+     *
+     * @param data   - The data to write to.
+     * @param offset - The offset in the data where we will write.
+     * @param value  - The value to write.
+     * @return The offset to the end of the thing.
+     */
+    public static int serializeWarrior(final byte[] data, int offset, @Nonnull final Warrior value) {
+        // Write owner
+        offset += serializePlayer(data, offset, value.getOwner());
+
+        // Write type
+        offset += serializeWarriorType(data, offset, value);
+
+        // Write health
+        offset += destructureInt(data, offset, value.getHealth());
+
+        return offset;
+    }
+
+    /**
+     * Predict the size of a Warrior company once serialized.
+     *
+     * @param val - The value to test.
+     * @return The size of the value serialized.
+     */
+    public static int predictSizeSerializedWarriorCompany(@Nonnull final List<Warrior> val) {
+        if (val.isEmpty())
+            return LEN_SHORT;
+        return LEN_SHORT + predictSizeSerializedPlayer(val.get(0).getOwner())
+                + val.size() * (1 + LEN_INT);
+    }
+
+    /**
+     * Deserialize a Warrior company from raw bytes.
+     *
+     * @param data   - The data to read from.
+     * @param offset - The offset in the data where we will read.
+     * @param <T>    - The type of warrior to deserialize.
+     * @return The rebuilt Warrior.
+     */
+    @SuppressWarnings("unchecked")
+    @Nonnull
+    public static <T extends Warrior> List<T> deserializeWarriorCompany(final byte[] data, int offset) {
+        // Read len
+        final short len = rebuildShort(data, offset);
+        offset += LEN_SHORT;
+
+        // Read owner
+        final Player owner = deserializePlayer(data, offset);
+        offset += predictSizeSerializedPlayer(owner);
+
+        final List<T> company = new ArrayList<>(len);
+
+        // Read each warrior
+        for (int i = 0; i < len; i++) {
+            final Warrior w = deserializeWarriorType(data, offset, owner);
+            offset += 1;
+
+            final int health = rebuildInt(data, offset);
+            offset += LEN_INT;
+
+            company.add((T) w);
+        }
+
+        return company;
+    }
+
+    /**
+     * Serialize a Warrior company by writing his owner and for each it's type and health into the data.
+     *
+     * @param data   - The data to write to.
+     * @param offset - The offset in the data where we will write.
+     * @param value  - The value to write.
+     * @return The offset to the end of the thing.
+     */
+    public static int serializeWarriorCompany(final byte[] data, int offset, @Nonnull final List<Warrior> value) {
+        // Write len
+        offset += destructureShort(data, offset, (short) value.size());
+
+        if (!value.isEmpty()) {
+            // Write owner
+            final Player owner = value.get(0).getOwner();
+            offset += serializePlayer(data, offset, owner);
+
+            for (final Warrior w : value) {
+                // Write type
+                offset += serializeWarriorType(data, offset, w);
+
+                // Write health
+                offset += destructureInt(data, offset, w.getHealth());
+            }
+        }
+
+        return offset;
+    }
+
+    /**
+     * Deserialize a warrior type from raw bytes.
      *
      * @param data   - The data to read from.
      * @param offset - The offset in the data where we will read.
      * @return The rebuilt warrior.
      */
     @Nonnull
-    public static Warrior rebuildWarriorQ(final byte[] data, int offset, @Nonnull final Player owner) {
+    public static Warrior deserializeWarriorType(final byte[] data, int offset, @Nonnull final Player owner) {
         final byte type = data[offset];
 
         switch (type) {
@@ -257,14 +369,14 @@ public class NetDestructuror {
     }
 
     /**
-     * Destructure a queued warrior into the data.
+     * Serialize a warrior type into the data.
      *
      * @param data   - The data to write to.
      * @param offset - The offset in the data where we will write.
      * @param value  - The value to write.
      * @return The offset to the end of the thing.
      */
-    public static int destructureWarriorQ(final byte[] data, int offset, @Nonnull final Warrior value) {
+    public static int serializeWarriorType(final byte[] data, int offset, @Nonnull final Warrior value) {
         final byte type;
         if (value instanceof Dwarf) {
             if (value instanceof DwarfLeader)
@@ -286,27 +398,27 @@ public class NetDestructuror {
     }
 
     /**
-     * Predict the size of a Castle once destructured.
+     * Predict the size of a Castle once serialized.
      *
      * @param val - The value to test.
-     * @return The size of the value destructured.
+     * @return The size of the value serialized.
      */
-    public static int predictSizeDestructuredCastle(@Nonnull final Castle val) {
-        return predictSizeDestructuredPlayer(val.getOwner())
+    public static int predictSizeSerializedCastle(@Nonnull final Castle val) {
+        return predictSizeSerializedPlayer(val.getOwner())
                 + LEN_SHORT + 1 + LEN_SHORT + val.getTrainingQueue().size();
     }
 
     /**
-     * Restructure a Castle from raw bytes.
+     * Deserialize a Castle from raw bytes.
      *
      * @param data   - The data to read from.
      * @param offset - The offset in the data where we will read.
      * @return The rebuilt castle.
      */
-    public static Castle rebuildCastle(final byte[] data, int offset) {
+    public static Castle deserializeCastle(final byte[] data, int offset) {
         // Read owner
-        final Player owner = rebuildPlayer(data, offset);
-        offset += predictSizeDestructuredPlayer(owner);
+        final Player owner = deserializePlayer(data, offset);
+        offset += predictSizeSerializedPlayer(owner);
 
         // Read resources
         final short resources = rebuildShort(data, offset);
@@ -326,7 +438,7 @@ public class NetDestructuror {
         if (size > 0) {
             final Warrior[] queue = new Warrior[size];
             for (int i = 0; i < size; i++) {
-                queue[i] = rebuildWarriorQ(data, offset, owner);
+                queue[i] = deserializeWarriorType(data, offset, owner);
                 offset += 1;
 
             }
@@ -338,16 +450,16 @@ public class NetDestructuror {
     }
 
     /**
-     * Destructure a Castle by writing his owner, resources and trainingQueue into the data.
+     * Serialize a Castle by writing his owner, resources and trainingQueue into the data.
      *
      * @param data   - The data to write to.
      * @param offset - The offset in the data where we will write.
      * @param value  - The value to write.
      * @return The offset to the end of the thing.
      */
-    public static int destructureCastle(final byte[] data, int offset, @Nonnull final Castle value) {
+    public static int serializeCastle(final byte[] data, int offset, @Nonnull final Castle value) {
         // Write owner
-        offset = destructurePlayer(data, offset, value.getOwner());
+        offset = serializePlayer(data, offset, value.getOwner());
 
         // Write resources
         final short resources = (short) value.getResources();
@@ -363,7 +475,7 @@ public class NetDestructuror {
 
         if (size > 0) {
             for (Warrior w : value.getTrainingQueue()) {
-                offset = destructureWarriorQ(data, offset, w);
+                offset = serializeWarriorType(data, offset, w);
             }
         }
 

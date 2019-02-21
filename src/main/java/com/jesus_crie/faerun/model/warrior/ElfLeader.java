@@ -12,7 +12,7 @@ public class ElfLeader extends Elf {
     }
 
     @Override
-    public int getCost() {
+    public int getCostFactor() {
         return 4;
     }
 }

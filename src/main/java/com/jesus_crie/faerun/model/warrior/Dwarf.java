@@ -11,7 +11,7 @@ public class Dwarf extends Warrior {
     }
 
     @Override
-    public int getCost() {
+    public int getCostFactor() {
         return 1;
     }
 

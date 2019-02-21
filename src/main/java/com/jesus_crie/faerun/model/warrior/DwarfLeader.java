@@ -11,7 +11,7 @@ public class DwarfLeader extends Dwarf {
     }
 
     @Override
-    public int getCost() {
+    public int getCostFactor() {
         return 3;
     }
 
