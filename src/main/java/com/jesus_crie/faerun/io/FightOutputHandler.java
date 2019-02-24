@@ -1,4 +1,4 @@
-package com.jesus_crie.faerun.iohandler;
+package com.jesus_crie.faerun.io;
 
 import com.jesus_crie.faerun.model.board.BoardCell;
 import com.jesus_crie.faerun.model.warrior.Warrior;

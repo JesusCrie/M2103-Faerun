@@ -1,6 +1,8 @@
 package com.jesus_crie.faerun.model.board;
 
-public class BoardSettings {
+import java.io.Serializable;
+
+public class BoardSettings implements Serializable {
 
     private final int size;
     private final int baseCost;

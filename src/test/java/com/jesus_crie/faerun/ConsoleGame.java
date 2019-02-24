@@ -1,9 +1,9 @@
 package com.jesus_crie.faerun;
 
-import com.jesus_crie.faerun.iohandler.ConsoleHandler;
-import com.jesus_crie.faerun.iohandler.InputHandler;
-import com.jesus_crie.faerun.iohandler.NopFightOutputHandler;
-import com.jesus_crie.faerun.iohandler.OutputHandler;
+import com.jesus_crie.faerun.io.ConsoleHandler;
+import com.jesus_crie.faerun.io.InputHandler;
+import com.jesus_crie.faerun.io.NopFightOutputHandler;
+import com.jesus_crie.faerun.io.OutputHandler;
 import com.jesus_crie.faerun.logic.GameLogic;
 import com.jesus_crie.faerun.model.Player;
 import com.jesus_crie.faerun.model.board.BoardSettings;
