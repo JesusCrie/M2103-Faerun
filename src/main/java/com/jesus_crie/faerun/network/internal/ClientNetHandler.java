@@ -4,10 +4,11 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.net.Socket;
 
+/**
+ * Specialization which setup the client socket to a given remote address.
+ */
 public class ClientNetHandler extends NetHandler {
 
     public ClientNetHandler(@Nonnull final String address, final int port) throws IOException {

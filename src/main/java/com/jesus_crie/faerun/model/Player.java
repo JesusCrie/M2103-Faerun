@@ -3,6 +3,9 @@ package com.jesus_crie.faerun.model;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+/**
+ * Represent a player, its username and side.
+ */
 public class Player {
 
     private final String pseudo;

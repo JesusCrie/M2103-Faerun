@@ -82,6 +82,7 @@ public class Castle {
 
     /**
      * Train as much warriors of the queue as possible.
+     *
      * @return A list of the queued warriors.
      */
     @Nonnull
@@ -99,6 +100,7 @@ public class Castle {
 
     /**
      * Try to train a single warrior using this castle's resources.
+     *
      * @param w - The warrior to train.
      * @return True if the warrior has been successfully trained, otherwise False.
      */

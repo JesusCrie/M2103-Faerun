@@ -2,7 +2,12 @@ package com.jesus_crie.faerun.model.board;
 
 import java.io.Serializable;
 
+/**
+ * Contains the global settings of the board.
+ */
 public class BoardSettings implements Serializable {
+
+    private static final long serialVersionUID = 8536695707603265014L;
 
     private final int size;
     private final int baseCost;
@@ -22,22 +27,37 @@ public class BoardSettings implements Serializable {
         this.resourcesPerRound = resourcesPerRound;
     }
 
+    /**
+     * @return The size of the board.
+     */
     public int getSize() {
         return size;
     }
 
+    /**
+     * @return The cost multiplier.
+     */
     public int getBaseCost() {
         return baseCost;
     }
 
+    /**
+     * @return The amount of dices to roll.
+     */
     public int getDiceAmount() {
         return diceAmount;
     }
 
+    /**
+     * @return The initial amount of resources of each player.
+     */
     public int getInitialResources() {
         return initialResources;
     }
 
+    /**
+     * @return The amount of resources gained per round.
+     */
     public int getResourcesPerRound() {
         return resourcesPerRound;
     }

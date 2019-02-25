@@ -10,7 +10,6 @@ import com.jesus_crie.faerun.network.FaerunProtocol;
 import com.jesus_crie.faerun.utils.Pair;
 
 import javax.annotation.Nonnull;
-import java.net.InetSocketAddress;
 import java.util.Map;
 
 /**

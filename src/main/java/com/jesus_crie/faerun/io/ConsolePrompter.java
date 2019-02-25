@@ -11,7 +11,6 @@ import com.jesus_crie.faerun.utils.Pair;
 import javax.annotation.Nonnull;
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.net.InetSocketAddress;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +18,9 @@ import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+/**
+ * Ask the local player through the console.
+ */
 public class ConsolePrompter implements Prompter {
 
     private final Scanner in;
