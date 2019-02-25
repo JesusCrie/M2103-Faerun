@@ -1,8 +1,11 @@
 package com.jesus_crie.faerun.utils;
 
 import javax.annotation.Nonnull;
+import java.io.Serializable;
 
-public class Pair<T, V> {
+public class Pair<T, V> implements Serializable {
+
+    private static final long serialVersionUID = 732229522109241921L;
 
     private final T left;
     private final V right;

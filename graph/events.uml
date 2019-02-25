@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="741.0" y="84.0">com.jesus_crie.faerun.event.NewRoundEvent</node>
+    <node x="386.00000000000006" y="84.0">com.jesus_crie.faerun.event.SettingsReadyEvent</node>
+    <node x="210.00000000000006" y="84.0">com.jesus_crie.faerun.event.AskGameEvent</node>
+    <node x="928.0" y="84.0">com.jesus_crie.faerun.event.WelcomeEvent</node>
+    <node x="181.00000000000006" y="168.0">com.jesus_crie.faerun.event.AskBoardSettingsEvent</node>
+    <node x="415.00000000000006" y="168.0">com.jesus_crie.faerun.event.AskUsernameEvent</node>
+    <node x="593.5" y="0.0">com.jesus_crie.faerun.event.GameEvent</node>
+    <node x="597.0" y="84.0">com.jesus_crie.faerun.event.FightEvent</node>
+    <node x="0.0" y="168.0">com.jesus_crie.faerun.event.AskQueueEvent</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="com.jesus_crie.faerun.event.AskQueueEvent" target="com.jesus_crie.faerun.event.AskGameEvent">
+      <point x="0.0" y="-17.0" />
+      <point x="80.5" y="143.0" />
+      <point x="236.00000000000006" y="143.0" />
+      <point x="-52.0" y="17.0" />
+    </edge>
+    <edge source="com.jesus_crie.faerun.event.WelcomeEvent" target="com.jesus_crie.faerun.event.GameEvent">
+      <point x="0.0" y="-17.0" />
+      <point x="1005.0" y="54.0" />
+      <point x="711.4000000000001" y="54.0" />
+      <point x="52.39999999999998" y="17.0" />
+    </edge>
+    <edge source="com.jesus_crie.faerun.event.NewRoundEvent" target="com.jesus_crie.faerun.event.GameEvent">
+      <point x="0.0" y="-17.0" />
+      <point x="824.5" y="64.0" />
+      <point x="685.2" y="64.0" />
+      <point x="26.200000000000045" y="17.0" />
+    </edge>
+    <edge source="com.jesus_crie.faerun.event.AskBoardSettingsEvent" target="com.jesus_crie.faerun.event.AskGameEvent">
+      <point x="0.0" y="-17.0" />
+      <point x="0.0" y="17.0" />
+    </edge>
+    <edge source="com.jesus_crie.faerun.event.AskGameEvent" target="com.jesus_crie.faerun.event.GameEvent">
+      <point x="0.0" y="-17.0" />
+      <point x="288.00000000000006" y="54.0" />
+      <point x="606.6000000000001" y="54.0" />
+      <point x="-52.39999999999998" y="17.0" />
+    </edge>
+    <edge source="com.jesus_crie.faerun.event.FightEvent" target="com.jesus_crie.faerun.event.GameEvent">
+      <point x="0.0" y="-17.0" />
+      <point x="0.0" y="17.0" />
+    </edge>
+    <edge source="com.jesus_crie.faerun.event.SettingsReadyEvent" target="com.jesus_crie.faerun.event.GameEvent">
+      <point x="0.0" y="-17.0" />
+      <point x="481.50000000000006" y="64.0" />
+      <point x="632.8" y="64.0" />
+      <point x="-26.200000000000045" y="17.0" />
+    </edge>
+    <edge source="com.jesus_crie.faerun.event.AskUsernameEvent" target="com.jesus_crie.faerun.event.AskGameEvent">
+      <point x="0.0" y="-17.0" />
+      <point x="508.50000000000006" y="143.0" />
+      <point x="340.00000000000006" y="143.0" />
+      <point x="52.0" y="17.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="541.0" y="101.0" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Inner Classes</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

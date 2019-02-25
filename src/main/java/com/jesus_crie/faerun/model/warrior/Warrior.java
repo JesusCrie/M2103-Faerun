@@ -3,11 +3,13 @@ package com.jesus_crie.faerun.model.warrior;
 import com.jesus_crie.faerun.model.Player;
 
 import javax.annotation.Nonnull;
+import java.io.Closeable;
+import java.io.Serializable;
 
-public abstract class Warrior {
+public abstract class Warrior implements Serializable, Cloneable {
 
-    private final Player owner;
-    protected int strength = 10;
+    private transient final Player owner;
+    protected transient int strength = 10;
     protected int health = 100;
 
     public Warrior(@Nonnull final Player player) {
@@ -72,5 +74,15 @@ public abstract class Warrior {
     @Override
     public String toString() {
         return getClass().getSimpleName() + "[HP: " + getHealth() + "]";
+    }
+
+    @Nonnull
+    @Override
+    protected Object clone() {
+        try {
+            return super.clone();
+        } catch (CloneNotSupportedException ignore) {
+            return null;
+        }
     }
 }
