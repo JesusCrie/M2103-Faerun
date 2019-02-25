@@ -3,19 +3,77 @@
   <ID>JAVA</ID>
   <OriginalElement />
   <nodes>
-    <node x="408.0" y="0.0">com.jesus_crie.faerun.network.NetServerManager</node>
-    <node x="0.0" y="167.0">com.jesus_crie.faerun.network.NetPayload.Opcode</node>
-    <node x="74.0" y="0.0">com.jesus_crie.faerun.network.NetPayload</node>
-    <node x="0.0" y="654.0">com.jesus_crie.faerun.network.FaerunProtocol</node>
+    <node x="16.5" y="360.0">com.jesus_crie.faerun.network.internal.ClientNetHandler</node>
+    <node x="179.77499999999998" y="84.0">com.jesus_crie.faerun.network.internal.NetHandler</node>
+    <node x="168.6604166666667" y="912.0">com.jesus_crie.faerun.network.FaerunProtocol.ProtocolServer</node>
+    <node x="513.775" y="166.0">com.jesus_crie.faerun.event.AskGameEvent</node>
+    <node x="18.5" y="499.0">com.jesus_crie.faerun.network.FaerunProtocol.ProtocolClient</node>
+    <node x="398.775" y="0.0">com.jesus_crie.faerun.event.GameEvent</node>
+    <node x="357.5" y="332.0">com.jesus_crie.faerun.network.internal.ServerNetHandler</node>
+    <node x="0.0" y="774.0">com.jesus_crie.faerun.network.FaerunProtocol</node>
   </nodes>
   <notes />
   <edges>
-    <edge source="com.jesus_crie.faerun.network.NetPayload.Opcode" target="com.jesus_crie.faerun.network.NetPayload">
-      <point x="0.0" y="-221.0" />
-      <point x="0.0" y="58.5" />
+    <edge source="com.jesus_crie.faerun.network.internal.NetHandler" target="com.jesus_crie.faerun.event.GameEvent">
+      <point x="0.0" y="-99.0" />
+      <point x="336.775" y="59.0" />
+      <point x="431.525" y="59.0" />
+      <point x="-32.75" y="17.0" />
+    </edge>
+    <edge source="com.jesus_crie.faerun.network.internal.ClientNetHandler" target="com.jesus_crie.faerun.network.internal.NetHandler">
+      <point x="80.25" y="-30.5" />
+      <point x="257.25" y="307.0" />
+      <point x="297.525" y="307.0" />
+      <point x="-39.25" y="99.0" />
+    </edge>
+    <edge source="com.jesus_crie.faerun.network.FaerunProtocol.ProtocolClient" target="com.jesus_crie.faerun.network.internal.ClientNetHandler">
+      <point x="-79.25" y="-112.5" />
+      <point x="-80.25" y="30.5" />
+    </edge>
+    <edge source="com.jesus_crie.faerun.network.FaerunProtocol" target="com.jesus_crie.faerun.network.FaerunProtocol.ProtocolClient">
+      <point x="0.0" y="-44.0" />
+      <point x="0.0" y="112.5" />
+    </edge>
+    <edge source="com.jesus_crie.faerun.event.AskGameEvent" target="com.jesus_crie.faerun.event.GameEvent">
+      <point x="0.0" y="-17.0" />
+      <point x="591.775" y="59.0" />
+      <point x="497.025" y="59.0" />
+      <point x="32.75" y="17.0" />
+    </edge>
+    <edge source="com.jesus_crie.faerun.network.internal.ServerNetHandler" target="com.jesus_crie.faerun.network.internal.NetHandler">
+      <point x="59.0" y="-58.5" />
+      <point x="534.5" y="307.0" />
+      <point x="454.525" y="307.0" />
+      <point x="117.75" y="99.0" />
+    </edge>
+    <edge source="com.jesus_crie.faerun.network.FaerunProtocol" target="com.jesus_crie.faerun.network.FaerunProtocol.ProtocolServer">
+      <point x="118.0" y="44.0" />
+      <point x="295.0" y="892.0" />
+      <point x="315.6604166666667" y="892.0" />
+      <point x="0.0" y="-126.5" />
+    </edge>
+    <edge source="com.jesus_crie.faerun.network.FaerunProtocol.ProtocolServer" target="com.jesus_crie.faerun.network.internal.ServerNetHandler">
+      <point x="58.799999999999955" y="-126.5" />
+      <point x="374.4604166666667" y="882.0" />
+      <point x="477.68333333333334" y="882.0" />
+      <point x="477.68333333333334" y="474.0" />
+      <point x="416.5" y="474.0" />
+      <point x="-59.0" y="58.5" />
+    </edge>
+    <edge source="com.jesus_crie.faerun.network.FaerunProtocol.ProtocolServer" target="com.jesus_crie.faerun.network.FaerunProtocol">
+      <point x="-117.60000000000002" y="-126.5" />
+      <point x="198.06041666666667" y="892.0" />
+      <point x="59.0" y="892.0" />
+      <point x="-118.0" y="44.0" />
+    </edge>
+    <edge source="com.jesus_crie.faerun.network.FaerunProtocol.ProtocolClient" target="com.jesus_crie.faerun.network.FaerunProtocol">
+      <point x="105.66666666666669" y="112.5" />
+      <point x="282.6666666666667" y="749.0" />
+      <point x="295.0" y="749.0" />
+      <point x="118.0" y="-44.0" />
     </edge>
   </edges>
-  <settings layout="Hierarchic Group" zoom="1.0" x="0.0" y="0.0" />
+  <settings layout="Hierarchic Group" zoom="0.751054852320675" x="335.0" y="582.5" />
   <SelectedNodes />
   <Categories>
     <Category>Fields</Category>

@@ -3,11 +3,13 @@ package com.jesus_crie.faerun.model.warrior;
 import com.jesus_crie.faerun.model.Player;
 
 import javax.annotation.Nonnull;
+import java.io.Closeable;
+import java.io.Serializable;
 
-public abstract class Warrior {
+public abstract class Warrior implements Serializable, Cloneable {
 
-    private final Player owner;
-    protected int strength = 10;
+    private transient final Player owner;
+    protected transient int strength = 10;
     protected int health = 100;
 
     public Warrior(@Nonnull final Player player) {
@@ -38,6 +40,7 @@ public abstract class Warrior {
 
     /**
      * Set the health of this warrior, can't be negative.
+     *
      * @param health - The wanted health.
      */
     public void setHealth(int health) {
@@ -52,12 +55,16 @@ public abstract class Warrior {
     }
 
     /**
-     * @return The training cost of this unit.
+     * Get the training cost factor if the unit, will be multiplied by the base cost
+     * of the castle.
+     *
+     * @return The training cost factor of this unit.
      */
-    public abstract int getCost();
+    public abstract int getCostFactor();
 
     /**
      * Take damage, some warriors may override this method.
+     *
      * @param damage - The damage to apply.
      */
     public void takeDamage(final int damage) {
@@ -67,5 +74,15 @@ public abstract class Warrior {
     @Override
     public String toString() {
         return getClass().getSimpleName() + "[HP: " + getHealth() + "]";
+    }
+
+    @Nonnull
+    @Override
+    protected Object clone() {
+        try {
+            return super.clone();
+        } catch (CloneNotSupportedException ignore) {
+            return null;
+        }
     }
 }

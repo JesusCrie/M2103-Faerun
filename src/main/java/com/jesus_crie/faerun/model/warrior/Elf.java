@@ -12,7 +12,7 @@ public class Elf extends Warrior {
     }
 
     @Override
-    public int getCost() {
+    public int getCostFactor() {
         return 2;
     }
 }

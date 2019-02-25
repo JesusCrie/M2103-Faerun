@@ -3,127 +3,90 @@
   <ID>JAVA</ID>
   <OriginalElement />
   <nodes>
-    <node x="625.8254734848485" y="0.0">com.jesus_crie.faerun.iohandler.FightOutputHandler</node>
-    <node x="1566.0925189393938" y="614.0">com.jesus_crie.faerun.iohandler.ConsoleHandler</node>
-    <node x="32.5" y="265.5">com.jesus_crie.faerun.logic.BoardLogic</node>
-    <node x="570.5" y="305.5">com.jesus_crie.faerun.logic.GameLogic.FightLogic</node>
-    <node x="1709.0925189393938" y="1224.5">com.jesus_crie.faerun.iohandler.ConsoleHandler.ConsoleFightOutputHandler</node>
-    <node x="511.16685606060577" y="708.5">com.jesus_crie.faerun.logic.GameLogic</node>
-    <node x="985.5" y="239.0">com.jesus_crie.faerun.iohandler.OutputHandler</node>
-    <node x="1360.5" y="320.5">com.jesus_crie.faerun.iohandler.InputHandler</node>
-    <node x="166.6874999999999" y="1224.0">com.jesus_crie.faerun.logic.GameLogic.CommonOutputHandler</node>
+    <node x="495.5" y="274.0">com.jesus_crie.faerun.logic.BoardLogic</node>
+    <node x="89.0" y="1126.5">com.jesus_crie.faerun.logic.FightEntry.Hit</node>
+    <node x="1997.5" y="674.0">com.jesus_crie.faerun.logic.GameLogic.FightLogic</node>
+    <node x="694.5" y="1528.5">com.jesus_crie.faerun.logic.FightEntry</node>
+    <node x="570.0" y="1740.0">com.jesus_crie.faerun.logic.FightRecord</node>
+    <node x="1204.5" y="579.5">com.jesus_crie.faerun.logic.GameLogic</node>
+    <node x="409.0" y="1153.5">com.jesus_crie.faerun.logic.FightEntry.Dead</node>
+    <node x="-12.5" y="47.5">com.jesus_crie.faerun.logic.GameLogic.CommonOutputHandler</node>
   </nodes>
   <notes />
   <edges>
     <edge source="com.jesus_crie.faerun.logic.GameLogic" target="com.jesus_crie.faerun.logic.BoardLogic">
-      <point x="-223.27272727272714" y="-180.5" />
-      <point x="594.8941287878786" y="584.0" />
-      <point x="420.25" y="584.0" />
-      <point x="129.25" y="126.0" />
+      <point x="-120.0" y="-180.5" />
+      <point x="1400.0" y="400.0" />
+      <point x="264.5" y="0.0" />
     </edge>
     <edge source="com.jesus_crie.faerun.logic.GameLogic.CommonOutputHandler" target="com.jesus_crie.faerun.logic.GameLogic">
-      <point x="34.91666666666663" y="-112.5" />
-      <point x="411.1041666666665" y="1184.0" />
-      <point x="613.5001893939391" y="1184.0" />
-      <point x="-204.66666666666663" y="180.5" />
+      <point x="0.0" y="-112.5" />
+      <point x="200.0" y="0.0" />
+      <point x="1520.0" y="0.0" />
+      <point x="0.0" y="-180.5" />
+    </edge>
+    <edge source="com.jesus_crie.faerun.logic.FightEntry.Hit" target="com.jesus_crie.faerun.logic.FightEntry">
+      <point x="-111.0" y="40.0" />
+      <point x="40.0" y="1320.0" />
+      <point x="40.0" y="1590.0" />
+      <point x="-105.5" y="-10.0" />
+    </edge>
+    <edge source="com.jesus_crie.faerun.logic.FightEntry.Dead" target="com.jesus_crie.faerun.logic.FightEntry.Hit">
+      <point x="0.0" y="-126.5" />
+      <point x="520.0" y="1080.0" />
+      <point x="200.0" y="1080.0" />
+      <point x="0.0" y="-153.5" />
     </edge>
     <edge source="com.jesus_crie.faerun.logic.GameLogic" target="com.jesus_crie.faerun.logic.GameLogic.CommonOutputHandler">
-      <point x="204.66666666666663" y="180.5" />
-      <point x="1022.8335227272723" y="1204.0" />
-      <point x="550.7708333333333" y="1204.0" />
-      <point x="174.58333333333337" y="-112.5" />
+      <point x="-40.0" y="-180.5" />
+      <point x="1480.0" y="160.0" />
+      <point x="212.5" y="0.0" />
     </edge>
-    <edge source="com.jesus_crie.faerun.iohandler.ConsoleHandler.ConsoleFightOutputHandler" target="com.jesus_crie.faerun.iohandler.ConsoleHandler">
-      <point x="-104.74999999999977" y="-112.0" />
-      <point x="1813.8425189393938" y="1204.0" />
-      <point x="1797.5925189393938" y="1204.0" />
-      <point x="0.0" y="275.0" />
+    <edge source="com.jesus_crie.faerun.logic.FightEntry" target="com.jesus_crie.faerun.logic.FightEntry.Hit">
+      <point x="-105.5" y="-20.0" />
+      <point x="200.0" y="1580.0" />
+      <point x="0.0" y="153.5" />
     </edge>
-    <edge source="com.jesus_crie.faerun.logic.GameLogic" target="com.jesus_crie.faerun.iohandler.InputHandler">
-      <point x="223.27272727272737" y="-180.5" />
-      <point x="1041.439583333333" y="584.0" />
-      <point x="1437.6666666666665" y="584.0" />
-      <point x="-154.33333333333326" y="71.0" />
-    </edge>
-    <edge source="com.jesus_crie.faerun.iohandler.ConsoleHandler" target="com.jesus_crie.faerun.iohandler.FightOutputHandler">
-      <point x="173.625" y="-275.0" />
-      <point x="1971.2175189393938" y="594.0" />
-      <point x="1919.6343749999996" y="594.0" />
-      <point x="1919.6343749999996" y="199.0" />
-      <point x="966.2629734848485" y="199.0" />
-      <point x="130.9375" y="84.5" />
-    </edge>
-    <edge source="com.jesus_crie.faerun.logic.GameLogic" target="com.jesus_crie.faerun.iohandler.FightOutputHandler">
-      <point x="-167.45454545454538" y="-180.5" />
-      <point x="650.7123106060603" y="574.0" />
-      <point x="560.0" y="574.0" />
-      <point x="560.0" y="219.0" />
-      <point x="809.1379734848485" y="219.0" />
-      <point x="-26.1875" y="84.5" />
-    </edge>
-    <edge source="com.jesus_crie.faerun.iohandler.ConsoleHandler" target="com.jesus_crie.faerun.iohandler.InputHandler">
-      <point x="-57.875" y="-275.0" />
-      <point x="1739.7175189393938" y="594.0" />
-      <point x="1746.3333333333335" y="594.0" />
-      <point x="154.33333333333348" y="71.0" />
-    </edge>
-    <edge source="com.jesus_crie.faerun.iohandler.ConsoleHandler" target="com.jesus_crie.faerun.iohandler.OutputHandler">
-      <point x="-173.625" y="-275.0" />
-      <point x="1623.9675189393938" y="574.0" />
-      <point x="1281.3333333333333" y="574.0" />
-      <point x="118.33333333333326" y="152.5" />
+    <edge source="com.jesus_crie.faerun.logic.FightRecord" target="com.jesus_crie.faerun.logic.FightEntry">
+      <point x="230.0" y="0.0" />
+      <point x="1080.0" y="1880.0" />
+      <point x="1080.0" y="1600.0" />
+      <point x="105.5" y="0.0" />
     </edge>
     <edge source="com.jesus_crie.faerun.logic.GameLogic" target="com.jesus_crie.faerun.logic.GameLogic.FightLogic">
-      <point x="-111.63636363636351" y="-180.5" />
-      <point x="706.5304924242423" y="564.0" />
-      <point x="619.875" y="564.0" />
-      <point x="-148.125" y="86.0" />
+      <point x="315.5" y="0.0" />
+      <point x="-202.5" y="0.0" />
     </edge>
-    <edge source="com.jesus_crie.faerun.logic.GameLogic" target="com.jesus_crie.faerun.iohandler.OutputHandler">
-      <point x="111.63636363636374" y="-180.5" />
-      <point x="929.8032196969696" y="564.0" />
-      <point x="1044.6666666666667" y="564.0" />
-      <point x="-118.33333333333326" y="152.5" />
+    <edge source="com.jesus_crie.faerun.logic.FightEntry.Hit" target="com.jesus_crie.faerun.logic.FightEntry.Dead">
+      <point x="111.0" y="0.0" />
+      <point x="-111.0" y="0.0" />
     </edge>
-    <edge source="com.jesus_crie.faerun.iohandler.OutputHandler" target="com.jesus_crie.faerun.iohandler.FightOutputHandler">
-      <point x="0.0" y="-152.5" />
-      <point x="1163.0" y="219.0" />
-      <point x="861.5129734848485" y="219.0" />
-      <point x="26.1875" y="84.5" />
-    </edge>
-    <edge source="com.jesus_crie.faerun.iohandler.ConsoleHandler.ConsoleFightOutputHandler" target="com.jesus_crie.faerun.iohandler.FightOutputHandler">
-      <point x="104.75000000000023" y="-112.0" />
-      <point x="2023.3425189393938" y="1204.0" />
-      <point x="2039.5925189393938" y="1204.0" />
-      <point x="2039.5925189393938" y="189.0" />
-      <point x="1018.6379734848485" y="189.0" />
-      <point x="183.3125" y="84.5" />
+    <edge source="com.jesus_crie.faerun.logic.FightEntry" target="com.jesus_crie.faerun.logic.FightEntry.Dead">
+      <point x="-105.5" y="-40.0" />
+      <point x="520.0" y="1560.0" />
+      <point x="0.0" y="126.5" />
     </edge>
     <edge source="com.jesus_crie.faerun.logic.GameLogic.FightLogic" target="com.jesus_crie.faerun.logic.GameLogic">
-      <point x="148.125" y="86.0" />
-      <point x="916.125" y="594.0" />
-      <point x="873.9850378787876" y="594.0" />
-      <point x="55.81818181818187" y="-180.5" />
+      <point x="-40.0" y="-86.0" />
+      <point x="2160.0" y="520.0" />
+      <point x="1600.0" y="520.0" />
+      <point x="80.0" y="-180.5" />
     </edge>
-    <edge source="com.jesus_crie.faerun.logic.GameLogic.CommonOutputHandler" target="com.jesus_crie.faerun.iohandler.FightOutputHandler">
-      <point x="-104.75" y="-112.5" />
-      <point x="271.4374999999999" y="1194.0" />
-      <point x="11.0" y="1194.0" />
-      <point x="11.0" y="199.0" />
-      <point x="704.3879734848485" y="199.0" />
-      <point x="-130.9375" y="84.5" />
+    <edge source="com.jesus_crie.faerun.logic.FightEntry.Dead" target="com.jesus_crie.faerun.logic.FightEntry">
+      <point x="-111.0" y="40.0" />
+      <point x="360.0" y="1320.0" />
+      <point x="360.0" y="1570.0" />
+      <point x="-105.5" y="-30.0" />
     </edge>
   </edges>
-  <settings layout="Hierarchic Group" zoom="0.5610249494268376" x="1077.5" y="731.4999999999999" />
-  <SelectedNodes>
-    <node>com.jesus_crie.faerun.iohandler.ConsoleHandler.ConsoleFightOutputHandler</node>
-  </SelectedNodes>
+  <settings layout="Hierarchic Group" zoom="0.7718993928881179" x="733.5" y="556.5" />
+  <SelectedNodes />
   <Categories>
     <Category>Fields</Category>
     <Category>Constructors</Category>
     <Category>Methods</Category>
-    <Category>Inner Classes</Category>
     <Category>Properties</Category>
+    <Category>Inner Classes</Category>
   </Categories>
   <SCOPE>All</SCOPE>
   <VISIBILITY>private</VISIBILITY>
