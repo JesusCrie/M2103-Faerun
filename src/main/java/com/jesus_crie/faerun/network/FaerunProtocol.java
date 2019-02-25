@@ -9,9 +9,37 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.net.InetAddress;
 
-public class FaerunProtocol {
+/**
+ * Contains the protocol used to communicate between two instances of the game across the network.
+ * The game is designed to have only one server and one client.
+ * The server can't handle more than one client not matter what.
+ * This protocol does not handle any reconnect mechanisms, if the connection is lost, nothing can be done at this level.
+ */
+public final class FaerunProtocol {
 
-    public static class ProtocolServer implements Closeable {
+    /**
+     * @return A new instance of the server protocol.
+     */
+    public static ProtocolServer asServer() {
+        return new ProtocolServer();
+    }
+
+    /**
+     * Attempt to connect to the remote server as a client.
+     * This method will automatically tries to connect to the server so the server must be running.
+     *
+     * @param address - The address of the host to connect to.
+     * @param port    - The port to connect to.
+     * @return A new instance of the client protocol.
+     */
+    public static ProtocolClient asClient(@Nonnull final InetAddress address, final int port) {
+        return new ProtocolClient(address, port);
+    }
+
+    /**
+     * Protocol to use when running as the server.
+     */
+    public static final class ProtocolServer implements Closeable {
 
         private final ServerNetHandler handler;
 
@@ -30,6 +58,8 @@ public class FaerunProtocol {
         public void waitClientAndSetup() {
             // Wait socket
             handler.waitForClient();
+
+            // Wait connect
 
             // Ask username
 
@@ -62,7 +92,10 @@ public class FaerunProtocol {
         }
     }
 
-    public static class ProtocolClient implements Closeable {
+    /**
+     * Protocol to use when running as the client.
+     */
+    public static final class ProtocolClient implements Closeable {
 
         private final ClientNetHandler handler;
 

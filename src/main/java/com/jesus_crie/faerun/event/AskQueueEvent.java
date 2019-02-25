@@ -3,7 +3,7 @@ package com.jesus_crie.faerun.event;
 /**
  * Ask the player to choose what he want to train.
  */
-public final class AskQueueEvent implements AskGameEvent {
+public final class AskQueueEvent implements AskEvent {
 
     private static final long serialVersionUID = -945873319683978188L;
 

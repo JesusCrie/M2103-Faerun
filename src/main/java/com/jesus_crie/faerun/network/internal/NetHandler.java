@@ -1,6 +1,6 @@
 package com.jesus_crie.faerun.network.internal;
 
-import com.jesus_crie.faerun.event.GameEvent;
+import com.jesus_crie.faerun.event.Event;
 import com.jesus_crie.faerun.network.MalformedPayloadException;
 
 import javax.annotation.Nonnull;
@@ -27,7 +27,7 @@ public abstract class NetHandler {
      * @param payload - The payload to send.
      * @return True if the payload has been successfully sent through the socket, otherwise false.
      */
-    public boolean sendPayload(@Nonnull final GameEvent payload) {
+    public boolean sendPayload(@Nonnull final Event payload) {
         checkOrThrow();
 
         try {
@@ -44,11 +44,11 @@ public abstract class NetHandler {
      * @return The rebuilt payload.
      */
     @Nonnull
-    public GameEvent receivePayload() throws MalformedPayloadException {
+    public Event receivePayload() throws MalformedPayloadException {
         checkOrThrow();
 
         try {
-            return (GameEvent) fromClient.readObject();
+            return (Event) fromClient.readObject();
         } catch (ClassNotFoundException e) {
             throw new MalformedPayloadException("An unknown class was read !", e);
         } catch (InvalidClassException | StreamCorruptedException | OptionalDataException e) {

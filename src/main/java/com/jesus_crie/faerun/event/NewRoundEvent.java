@@ -1,14 +1,12 @@
 package com.jesus_crie.faerun.event;
 
-import com.jesus_crie.faerun.model.Player;
-
 import javax.annotation.Nonnull;
 
 /**
  * Triggered when a new round starts.
  * Contains the current cells owned by each players and the round number.
  */
-public final class NewRoundEvent implements GameEvent {
+public final class NewRoundEvent implements Event {
 
     private static final long serialVersionUID = 4839576512516627686L;
 

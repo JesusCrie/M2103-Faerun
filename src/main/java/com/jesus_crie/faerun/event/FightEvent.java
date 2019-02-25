@@ -4,7 +4,10 @@ import com.jesus_crie.faerun.logic.FightRecord;
 
 import javax.annotation.Nonnull;
 
-public final class FightEvent implements GameEvent {
+/**
+ * Triggered when a fight has been performed.
+ */
+public final class FightEvent implements Event {
 
     private static final long serialVersionUID = 7392911604467117618L;
 

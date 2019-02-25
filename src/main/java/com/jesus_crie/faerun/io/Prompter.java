@@ -1,7 +1,7 @@
 package com.jesus_crie.faerun.io;
 
 import com.jesus_crie.faerun.event.AskBoardSettingsEvent;
-import com.jesus_crie.faerun.event.AskGameEvent;
+import com.jesus_crie.faerun.event.AskEvent;
 import com.jesus_crie.faerun.event.AskQueueEvent;
 import com.jesus_crie.faerun.event.AskUsernameEvent;
 import com.jesus_crie.faerun.model.board.BoardSettings;
@@ -14,7 +14,7 @@ public interface Prompter {
 
     @SuppressWarnings("unchecked")
     @Nonnull
-    default <T> T onAsk(@Nonnull final AskGameEvent<T> e) {
+    default <T> T onAsk(@Nonnull final AskEvent<T> e) {
         if (e instanceof AskUsernameEvent)
             return (T) onAskUsername((AskUsernameEvent) e);
         else if (e instanceof AskBoardSettingsEvent)

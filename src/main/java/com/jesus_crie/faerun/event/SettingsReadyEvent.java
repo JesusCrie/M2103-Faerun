@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
  * Triggered when the settings are ready and definitive.
  * This event is meant to be used to send the settings to the remote player.
  */
-public final class SettingsReadyEvent implements GameEvent {
+public final class SettingsReadyEvent implements Event {
 
     private final BoardSettings settings;
 

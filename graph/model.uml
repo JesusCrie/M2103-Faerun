@@ -3,45 +3,107 @@
   <ID>JAVA</ID>
   <OriginalElement />
   <nodes>
-    <node x="254.5" y="316.0">com.jesus_crie.faerun.model.warrior.Elf</node>
-    <node x="459.0" y="0.0">com.jesus_crie.faerun.model.Player</node>
-    <node x="108.5" y="0.0">com.jesus_crie.faerun.model.warrior.Warrior</node>
-    <node x="711.0" y="631.0">com.jesus_crie.faerun.model.board.Board</node>
-    <node x="0.0" y="469.0">com.jesus_crie.faerun.model.warrior.DwarfChief</node>
-    <node x="0.0" y="302.0">com.jesus_crie.faerun.model.warrior.Dwarf</node>
-    <node x="530.5" y="194.0">com.jesus_crie.faerun.model.Player.Side</node>
-    <node x="365.0" y="631.0">com.jesus_crie.faerun.model.board.BoardSettings</node>
-    <node x="0.0" y="631.0">com.jesus_crie.faerun.model.board.BoardCell</node>
-    <node x="237.0" y="483.0">com.jesus_crie.faerun.model.warrior.ElfChief</node>
+    <node x="674.9999999999999" y="860.0">com.jesus_crie.faerun.model.warrior.Elf</node>
+    <node x="740.4166666666666" y="192.0">com.jesus_crie.faerun.model.Player</node>
+    <node x="721.3153011204481" y="406.0">com.jesus_crie.faerun.model.warrior.Warrior</node>
+    <node x="349.3986344537814" y="1131.0">com.jesus_crie.faerun.model.board.Board</node>
+    <node x="844.0" y="846.0">com.jesus_crie.faerun.model.warrior.Dwarf</node>
+    <node x="775.4166666666666" y="0.0">com.jesus_crie.faerun.model.Player.Side</node>
+    <node x="0.0" y="792.0">com.jesus_crie.faerun.model.board.BoardSettings</node>
+    <node x="329.99999999999994" y="738.0">com.jesus_crie.faerun.model.board.BoardCell</node>
   </nodes>
   <notes />
   <edges>
-    <edge source="com.jesus_crie.faerun.model.warrior.DwarfChief" target="com.jesus_crie.faerun.model.warrior.Dwarf">
-      <point x="0.0" y="-58.5" />
-      <point x="0.0" y="58.5" />
+    <edge source="com.jesus_crie.faerun.model.warrior.Elf" target="com.jesus_crie.faerun.model.Player">
+      <point x="-49.66666666666663" y="-44.5" />
+      <point x="699.8333333333333" y="678.0" />
+      <point x="673.0976890756302" y="678.0" />
+      <point x="673.0976890756302" y="376.0" />
+      <point x="790.5595238095237" y="376.0" />
+      <point x="-66.85714285714289" y="72.0" />
     </edge>
     <edge source="com.jesus_crie.faerun.model.warrior.Elf" target="com.jesus_crie.faerun.model.warrior.Warrior">
       <point x="0.0" y="-44.5" />
-      <point x="325.5" y="277.0" />
-      <point x="271.25" y="277.0" />
-      <point x="54.25" y="126.0" />
+      <point x="749.4999999999999" y="708.0" />
+      <point x="814.6486344537814" y="708.0" />
+      <point x="-18.666666666666686" y="126.0" />
     </edge>
-    <edge source="com.jesus_crie.faerun.model.warrior.ElfChief" target="com.jesus_crie.faerun.model.warrior.Elf">
-      <point x="0.0" y="-44.5" />
-      <point x="0.0" y="44.5" />
+    <edge source="com.jesus_crie.faerun.model.board.Board" target="com.jesus_crie.faerun.model.Player">
+      <point x="138.0" y="-99.5" />
+      <point x="648.3986344537814" y="1111.0" />
+      <point x="1089.5" y="1111.0" />
+      <point x="1089.5" y="356.0" />
+      <point x="957.7023809523808" y="356.0" />
+      <point x="100.28571428571423" y="72.0" />
+    </edge>
+    <edge source="com.jesus_crie.faerun.model.board.BoardCell" target="com.jesus_crie.faerun.model.warrior.Warrior">
+      <point x="40.625" y="-166.5" />
+      <point x="533.125" y="688.0" />
+      <point x="739.9819677871147" y="688.0" />
+      <point x="-93.33333333333337" y="126.0" />
+    </edge>
+    <edge source="com.jesus_crie.faerun.model.Player" target="com.jesus_crie.faerun.model.Player.Side">
+      <point x="0.0" y="-72.0" />
+      <point x="857.4166666666666" y="172.0" />
+      <point x="829.1666666666666" y="172.0" />
+      <point x="10.75" y="71.0" />
+    </edge>
+    <edge source="com.jesus_crie.faerun.model.warrior.Warrior" target="com.jesus_crie.faerun.model.Player">
+      <point x="-56.0" y="-126.0" />
+      <point x="777.3153011204481" y="386.0" />
+      <point x="823.9880952380952" y="386.0" />
+      <point x="-33.428571428571445" y="72.0" />
     </edge>
     <edge source="com.jesus_crie.faerun.model.warrior.Dwarf" target="com.jesus_crie.faerun.model.warrior.Warrior">
-      <point x="0.0" y="-58.5" />
-      <point x="108.5" y="277.0" />
-      <point x="162.75" y="277.0" />
-      <point x="-54.25" y="126.0" />
+      <point x="-74.66666666666663" y="-58.5" />
+      <point x="881.3333333333333" y="718.0" />
+      <point x="889.3153011204481" y="718.0" />
+      <point x="56.0" y="126.0" />
+    </edge>
+    <edge source="com.jesus_crie.faerun.model.warrior.Dwarf" target="com.jesus_crie.faerun.model.Player">
+      <point x="74.66666666666669" y="-58.5" />
+      <point x="1030.6666666666665" y="718.0" />
+      <point x="1023.0976890756301" y="718.0" />
+      <point x="1023.0976890756301" y="376.0" />
+      <point x="890.8452380952381" y="376.0" />
+      <point x="33.42857142857146" y="72.0" />
+    </edge>
+    <edge source="com.jesus_crie.faerun.model.board.BoardCell" target="com.jesus_crie.faerun.model.Player.Side">
+      <point x="-121.875" y="-166.5" />
+      <point x="370.62499999999994" y="718.0" />
+      <point x="414.88935574229686" y="718.0" />
+      <point x="414.88935574229686" y="162.0" />
+      <point x="786.1666666666666" y="162.0" />
+      <point x="-32.25" y="71.0" />
+    </edge>
+    <edge source="com.jesus_crie.faerun.model.board.BoardCell" target="com.jesus_crie.faerun.model.Player">
+      <point x="-40.625" y="-166.5" />
+      <point x="451.87499999999994" y="718.0" />
+      <point x="425.88935574229686" y="718.0" />
+      <point x="425.88935574229686" y="366.0" />
+      <point x="757.1309523809523" y="366.0" />
+      <point x="-100.28571428571428" y="72.0" />
+    </edge>
+    <edge source="com.jesus_crie.faerun.model.board.Board" target="com.jesus_crie.faerun.model.board.BoardSettings">
+      <point x="-92.0" y="-99.5" />
+      <point x="418.3986344537814" y="1101.0" />
+      <point x="232.5" y="1101.0" />
+      <point x="77.5" y="112.5" />
+    </edge>
+    <edge source="com.jesus_crie.faerun.model.board.Board" target="com.jesus_crie.faerun.model.board.BoardCell">
+      <point x="46.0" y="-99.5" />
+      <point x="556.3986344537814" y="1091.0" />
+      <point x="600.8333333333333" y="1091.0" />
+      <point x="108.33333333333331" y="166.5" />
     </edge>
     <edge source="com.jesus_crie.faerun.model.Player.Side" target="com.jesus_crie.faerun.model.Player">
-      <point x="0.0" y="-71.0" />
-      <point x="0.0" y="72.0" />
+      <point x="32.25" y="71.0" />
+      <point x="850.6666666666666" y="162.0" />
+      <point x="935.4166666666666" y="162.0" />
+      <point x="78.00000000000001" y="-72.0" />
     </edge>
   </edges>
-  <settings layout="Hierarchic Group" zoom="0.7247386759581882" x="548.5" y="564.0" />
+  <settings layout="Hierarchic Group" zoom="0.7247386759581882" x="549.0" y="564.0144230769231" />
   <SelectedNodes />
   <Categories>
     <Category>Fields</Category>

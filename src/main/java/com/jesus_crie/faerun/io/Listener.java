@@ -10,7 +10,7 @@ public interface Listener {
      * When a event is received, it goes there and is dispatched to the correct handler.
      * @param e - The event that was triggered.
      */
-    default void onEvent(@Nonnull final GameEvent e) {
+    default void onEvent(@Nonnull final Event e) {
         if (e instanceof WelcomeEvent)
             onWelcome((WelcomeEvent) e);
         else if (e instanceof SettingsReadyEvent)
