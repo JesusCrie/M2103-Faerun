@@ -7,7 +7,7 @@ import javax.annotation.Nonnull;
 import java.io.*;
 import java.net.Socket;
 
-public abstract class NetHandler {
+public abstract class NetHandler implements Closeable {
 
     protected Socket client;
     protected ObjectOutputStream toClient;
@@ -22,12 +22,12 @@ public abstract class NetHandler {
     }
 
     /**
-     * Send a payload under the network to the client socket.
+     * Send a payload over the network through the socket.
      *
-     * @param payload - The payload to send.
-     * @return True if the payload has been successfully sent through the socket, otherwise false.
+     * @param payload - The paylaod to send.
+     * @return True of the payload has been successfully sent through the socket, otherwise False.
      */
-    public boolean sendPayload(@Nonnull final Event payload) {
+    public boolean sendPayload(@Nonnull final Serializable payload) {
         checkOrThrow();
 
         try {
@@ -39,16 +39,27 @@ public abstract class NetHandler {
     }
 
     /**
-     * Wait for a full payload to be retrieved from the socket and rebuilt.
+     * Send an event over the network through the client socket.
      *
-     * @return The rebuilt payload.
+     * @param payload - The payload to send.
+     * @return True if the payload has been successfully sent through the socket, otherwise false.
      */
-    @Nonnull
-    public Event receivePayload() throws MalformedPayloadException {
+    public boolean sendEvent(@Nonnull final Event payload) {
+        return sendPayload(payload);
+    }
+
+    /**
+     * Wait for an object to be retrieved from the socket.
+     *
+     * @param <T> - The type of object to wait for.
+     * @return The deserialized object read from the socket.
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends Serializable> T receivePayload() {
         checkOrThrow();
 
         try {
-            return (Event) fromClient.readObject();
+            return (T) fromClient.readObject();
         } catch (ClassNotFoundException e) {
             throw new MalformedPayloadException("An unknown class was read !", e);
         } catch (InvalidClassException | StreamCorruptedException | OptionalDataException e) {
@@ -59,10 +70,29 @@ public abstract class NetHandler {
     }
 
     /**
+     * Wait for an event to be retrieved from the socket.
+     *
+     * @return The deserialized event read from the socket.
+     */
+    @Nonnull
+    public Event receiveEvent() throws MalformedPayloadException {
+        return receivePayload();
+    }
+
+    /**
      * Throw an exception if the socket or one of the streams are closed.
      */
     protected void checkOrThrow() {
         if (client == null || !client.isConnected())
             throw new IllegalStateException("The client is not ready !");
+    }
+
+    @Override
+    public void close() {
+        try {
+            client.close();
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to close the socket !", e);
+        }
     }
 }

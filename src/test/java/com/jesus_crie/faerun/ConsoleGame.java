@@ -6,6 +6,7 @@ import com.jesus_crie.faerun.io.NopFightOutputHandler;
 import com.jesus_crie.faerun.io.OutputHandler;
 import com.jesus_crie.faerun.logic.GameLogic;
 import com.jesus_crie.faerun.model.Player;
+import com.jesus_crie.faerun.model.Side;
 import com.jesus_crie.faerun.model.board.BoardSettings;
 import com.jesus_crie.faerun.utils.Pair;
 
@@ -21,9 +22,9 @@ public class ConsoleGame {
         final Map<Player, Pair<InputHandler, OutputHandler>> gameMeta = new HashMap<>();
 
         handler1.displayPromptUsername();
-        final Player p1 = new Player(handler1.provideUsername(), Player.Side.LEFT);
+        final Player p1 = new Player(handler1.provideUsername(), Side.LEFT);
         handler2.displayPromptUsername();
-        final Player p2 = new Player(handler2.provideUsername(), Player.Side.RIGHT);
+        final Player p2 = new Player(handler2.provideUsername(), Side.RIGHT);
 
         gameMeta.put(p1, Pair.of(handler1, handler1));
         gameMeta.put(p2, Pair.of(handler2, handler2));

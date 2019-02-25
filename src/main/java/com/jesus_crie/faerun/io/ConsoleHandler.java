@@ -1,6 +1,7 @@
 package com.jesus_crie.faerun.io;
 
 import com.jesus_crie.faerun.model.Player;
+import com.jesus_crie.faerun.model.Side;
 import com.jesus_crie.faerun.model.board.Board;
 import com.jesus_crie.faerun.model.board.BoardCell;
 import com.jesus_crie.faerun.model.board.BoardSettings;
@@ -11,6 +12,7 @@ import javax.annotation.Nonnull;
 import java.io.PrintStream;
 import java.util.*;
 
+@Deprecated
 public class ConsoleHandler implements InputHandler, OutputHandler {
 
     private final Scanner in = new Scanner(System.in);
@@ -136,8 +138,8 @@ public class ConsoleHandler implements InputHandler, OutputHandler {
 
         for (int cellIndex = 0; cellIndex < board.getSettings().getSize(); cellIndex++) {
             final BoardCell cell = board.getCell(cellIndex);
-            if (cell.getSide() == Player.Side.LEFT) ++amountLeft;
-            else if (cell.getSide() == Player.Side.RIGHT) ++amountRight;
+            if (cell.getSide() == Side.LEFT) ++amountLeft;
+            else if (cell.getSide() == Side.RIGHT) ++amountRight;
         }
 
         out.printf("Left %d%% || %d%% Right\n",

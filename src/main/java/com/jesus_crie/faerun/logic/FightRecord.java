@@ -1,6 +1,6 @@
 package com.jesus_crie.faerun.logic;
 
-import com.jesus_crie.faerun.model.Player;
+import com.jesus_crie.faerun.model.Side;
 import com.jesus_crie.faerun.model.warrior.Warrior;
 
 import javax.annotation.Nonnull;
@@ -14,13 +14,13 @@ public final class FightRecord implements Serializable {
     private static final long serialVersionUID = 4074856688688116992L;
 
     private final int cellIndex;
-    private final Player.Side attackerSide;
+    private final Side attackerSide;
     private final Warrior[] attackers;
     private final Warrior[] defenders;
     private final FightEntry[] entries;
 
     public FightRecord(final int cellIndex,
-                       @Nonnull Player.Side attackerSide,
+                       @Nonnull Side attackerSide,
                        @Nonnull final Warrior[] attackers,
                        @Nonnull final Warrior[] defenders,
                        @Nonnull final FightEntry[] entries) {
@@ -36,7 +36,7 @@ public final class FightRecord implements Serializable {
     }
 
     @Nonnull
-    public Player.Side getAttackerSide() {
+    public Side getAttackerSide() {
         return attackerSide;
     }
 
@@ -51,9 +51,9 @@ public final class FightRecord implements Serializable {
     }
 
     @Nonnull
-    public Player.Side getDefenderSide() {
-        return attackerSide == Player.Side.LEFT ?
-                Player.Side.RIGHT : Player.Side.LEFT;
+    public Side getDefenderSide() {
+        return attackerSide == Side.LEFT ?
+                Side.RIGHT : Side.LEFT;
     }
 
     @Nonnull
@@ -61,7 +61,7 @@ public final class FightRecord implements Serializable {
         return entries;
     }
 
-    public boolean isAttacker(@Nonnull final Player.Side side) {
+    public boolean isAttacker(@Nonnull final Side side) {
         return side == attackerSide;
     }
 }

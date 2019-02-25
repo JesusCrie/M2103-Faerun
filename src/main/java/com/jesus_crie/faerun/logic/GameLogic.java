@@ -1,44 +1,60 @@
 package com.jesus_crie.faerun.logic;
 
-import com.jesus_crie.faerun.io.FightOutputHandler;
-import com.jesus_crie.faerun.io.InputHandler;
-import com.jesus_crie.faerun.io.OutputHandler;
+import com.jesus_crie.faerun.event.Event;
+import com.jesus_crie.faerun.event.EventFactory;
+import com.jesus_crie.faerun.io.IOCombiner;
 import com.jesus_crie.faerun.model.Player;
+import com.jesus_crie.faerun.model.Side;
 import com.jesus_crie.faerun.model.board.BoardCell;
 import com.jesus_crie.faerun.model.board.BoardSettings;
 import com.jesus_crie.faerun.model.board.Castle;
 import com.jesus_crie.faerun.model.warrior.Warrior;
 import com.jesus_crie.faerun.utils.Dice;
-import com.jesus_crie.faerun.utils.Pair;
 
 import javax.annotation.Nonnull;
 import java.util.*;
 
-public class GameLogic {
+/**
+ * Contains all of the logic of the game.
+ */
+public final class GameLogic {
 
-    private final Map<Player, Pair<InputHandler, OutputHandler>> players;
-    private final CommonOutputHandler commonOutputHandler;
+    private final Map<Player, IOCombiner> players;
     private final BoardLogic boardLogic;
     private int roundNumber = 0;
 
-    public GameLogic(@Nonnull final Map<Player, Pair<InputHandler, OutputHandler>> players,
+    public GameLogic(@Nonnull final Map<Player, IOCombiner> players,
                      @Nonnull final BoardSettings settings) {
         this.players = players;
         boardLogic = new BoardLogic(settings, new ArrayList<>(players.keySet()));
-        commonOutputHandler = new CommonOutputHandler(
-                players.values().stream()
-                        .map(ioh -> ioh.getRight().getFightOutputHandler()).toArray(FightOutputHandler[]::new)
-        );
     }
 
-    public Map<Player, Pair<InputHandler, OutputHandler>> getPlayers() {
+    public Map<Player, IOCombiner> getPlayers() {
         return players;
     }
 
+    /**
+     * Dispatch an event to every player of the game.
+     *
+     * @param event - The event to dispatch.
+     */
+    private void dispatchToEveryone(@Nonnull final Event event) {
+        players.forEach((p, io) -> io.dispatch(event));
+    }
+
+    /**
+     * Main loop of the game.
+     * Calling this method will play the whole game and returns the winner.
+     *
+     * @return The winner of the game.
+     */
     @Nonnull
     public Player performFullGame() {
         // Collect players
         final Player[] players = this.players.keySet().toArray(new Player[2]);
+
+        // Send welcome
+        dispatchToEveryone(EventFactory.buildWelcomeEvent());
 
         // Index current player
         byte i = -1;
@@ -50,68 +66,74 @@ public class GameLogic {
             i %= players.length;
             current = players[i];
 
-            // Log new round
-            this.players.get(current).getRight().displayNewRound(current, ++roundNumber);
+            roundNumber++;
+
+            // Dispatch new round
+            dispatchToEveryone(
+                    EventFactory.buildNewRoundEvent(roundNumber, current.getPseudo(), boardLogic.getBoard())
+            );
+
         } while (!performPlayerRound(current));
 
         // Return the winning player
         return current;
     }
 
+    /**
+     * Perform one full round for a player.
+     *
+     * @param player - The owner of the round.
+     * @return True if the player has won, otherwise False.
+     */
     private boolean performPlayerRound(@Nonnull final Player player) {
+        // Train units
         performRoundTraining(player);
+        // Move units and fight
         performRoundMoveAndFight(player);
+        // Spawn trained units
         performRoundSpawn(player);
-
-        players.get(player).getRight().displayBoardProgression(boardLogic.getBoard());
-        players.get(player).getRight().displayBoard(boardLogic.getBoard());
 
         return hasWon(player.getSide());
     }
 
+    /**
+     * Perform the training part of the round where the player is asked what units he wants to train.
+     *
+     * @param player - The owner of the round.
+     */
     private void performRoundTraining(@Nonnull final Player player) {
         // Castle resources
         final Castle castle = boardLogic.getBoard().getCastle(player);
         castle.addResources(boardLogic.getBoard().getSettings().getResourcesPerRound());
 
         // Ask for what to train
-        players.get(player).getRight().displayCastleState(castle);
-        final Map<Class<? extends Warrior>, Integer> toBuild = players.get(player).getLeft().provideQueue();
-
-        // Process these
-        toBuild.entrySet().stream()
-                // Collect them
-                .collect(
-                        ArrayList<Warrior>::new,
-                        (container, entry) -> container.addAll(boardLogic.buildWarrior(player, entry.getKey(), entry.getValue())),
-                        ArrayList::addAll
-                        // Queue them
-                ).forEach(castle::queueWarriors);
-    }
-
-    private void performRoundSpawn(@Nonnull final Player player) {
-        // Train and spawn them
-        final List<Warrior> trained = boardLogic.getBoard().getCastle(player).train();
-
-        boardLogic.spawn(
-                player.getSide() == Player.Side.LEFT ?
-                        0 : boardLogic.getBoard().getSettings().getSize() - 1,
-                trained
+        final Map<Class<? extends Warrior>, Integer> toBuild = players.get(player).dispatch(
+                EventFactory.buildAskQueueEvent(castle)
         );
+
+        // Build and queue
+        toBuild.entrySet().stream()
+                .flatMap(entry -> boardLogic.buildWarrior(player, entry.getKey(), entry.getValue()).stream())
+                .forEachOrdered(castle::queueWarrior);
     }
 
+    /**
+     * Perform the move step of the round and delegates the subsequent fights that might happen.
+     *
+     * @param player - The owner of the round.
+     */
     private void performRoundMoveAndFight(@Nonnull final Player player) {
         // If right player
-        if (player.getSide() == Player.Side.RIGHT) {
+        if (player.getSide() == Side.RIGHT) {
 
             for (int i = 0; i < boardLogic.getBoard().getSettings().getSize(); i++) {
                 final BoardCell origin = boardLogic.getBoard().getCell(i);
 
-                // If allies on cell
+                // If allies on cell (there is something to move)
                 if (origin.countAllies(player.getSide()) != 0) {
                     final BoardCell target = boardLogic.getBoard().getCell(Math.max(i - 1, 0));
 
-                    performRoundMoveAndFightLogic(player, origin, target);
+                    performRoundMoveLogic(player, origin, target);
                 }
             }
 
@@ -120,67 +142,131 @@ public class GameLogic {
             for (int i = boardLogic.getBoard().getSettings().getSize() - 1; i >= 0; i--) {
                 final BoardCell origin = boardLogic.getBoard().getCell(i);
 
-                // If allies on cell
+                // If allies on cell (there is something to move)
                 if (origin.countAllies(player.getSide()) != 0) {
                     final BoardCell target = boardLogic.getBoard().getCell(
                             Math.min(i + 1, boardLogic.getBoard().getSettings().getSize() - 1)
                     );
 
-                    performRoundMoveAndFightLogic(player, origin, target);
+                    performRoundMoveLogic(player, origin, target);
                 }
             }
         }
     }
 
-    private void performRoundMoveAndFightLogic(@Nonnull final Player player,
-                                               @Nonnull final BoardCell origin,
-                                               @Nonnull final BoardCell target) {
+    /**
+     * Perform the move and fight mechanism where we trigger a fight on a cell with enemies.
+     * The fight logic is delegated somewhere else.
+     *
+     * @param player - The owner of the round.
+     * @param origin - The origin cell where we come from.
+     * @param target - The target cell where we want to move to.
+     */
+    private void performRoundMoveLogic(@Nonnull final Player player,
+                                       @Nonnull final BoardCell origin,
+                                       @Nonnull final BoardCell target) {
         // If enemies on origin cell, fight
         if (origin.countEnemies(player.getSide()) != 0) {
-            final FightLogic fight = new FightLogic(origin);
-            fight.fight(player);
+            performRoundFightLogic(player, origin);
 
-            // Replace everyone
-            origin.removeWarriors(fight.getDeadWarriors());
+        } else { // If nobody, just move
 
-        } else { // If nobody, move
-            // If not the same cell (happen when fight in the last cell
+            // If not the same cell (happens when on the last cell)
             if (origin.getPosition() != target.getPosition())
                 boardLogic.move(origin.getPosition(), target.getPosition());
 
             // If enemies on target cell, fight
             if (target.countEnemies(player.getSide()) != 0) {
-                new FightLogic(target).fight(player);
+                performRoundFightLogic(player, target);
             }
         }
     }
 
-    private boolean hasWon(@Nonnull final Player.Side side) {
+    /**
+     * Perform the logic of a single fight and produces the associated event.
+     *
+     * @param player - The attacker.
+     * @param cell   - The target cell.
+     */
+    private void performRoundFightLogic(@Nonnull final Player player,
+                                        @Nonnull final BoardCell cell) {
+        final FightLogic fight = new FightLogic(cell);
+        // Fight
+        final FightRecord record = fight.fight(player);
+
+        // Remove corpses
+        cell.removeWarriors(fight.getDeadWarriors());
+
+        // Event
+        dispatchToEveryone(
+                EventFactory.buildFightEvent(record)
+        );
+    }
+
+    /**
+     * Perform the spawning part of the round where the units are effectively trained and spawned onto the board.
+     *
+     * @param player - The owner of the round.
+     */
+    private void performRoundSpawn(@Nonnull final Player player) {
+        // Train and spawn them
+        final List<Warrior> trained = boardLogic.getBoard().getCastle(player).train();
+
+        boardLogic.spawn(player.getSide() == Side.LEFT ?
+                0 : boardLogic.getBoard().getSettings().getSize() - 1, trained
+        );
+    }
+
+    /**
+     * Check if the player of the given side has won.
+     *
+     * @param side - The side of the player to check.
+     * @return True if the player has won, otherwise False.
+     */
+    private boolean hasWon(@Nonnull final Side side) {
         // Get opposite cell depending on side
         final BoardCell target;
-        if (side == Player.Side.RIGHT)
+        if (side == Side.RIGHT)
             target = boardLogic.getBoard().getCell(0);
-        else
+        else // side == Side.LEFT
             target = boardLogic.getBoard().getCell(boardLogic.getBoard().getSettings().getSize() - 1);
 
         // If there are only allies in the cell = victory
         return target.countEnemies(side) == 0 && target.countAllies(side) != 0;
     }
 
-    public class FightLogic {
+    /**
+     * Handles the logic of one fight
+     */
+    public final class FightLogic {
 
         private final BoardCell cell;
         private final LinkedList<Warrior> deadWarriors = new LinkedList<>();
+        private final List<FightEntry> fightEntries = new LinkedList<>();
 
         public FightLogic(@Nonnull final BoardCell cell) {
             this.cell = cell;
         }
 
+        /**
+         * @return The list of the warriors who died during this fight.
+         */
         public LinkedList<Warrior> getDeadWarriors() {
             return deadWarriors;
         }
 
-        public void fight(@Nonnull final Player attacker) {
+        /**
+         * Initiate the fight, query the attackers and defenders, shuffle them and start the fight.
+         *
+         * @param attacker - The attacker.
+         * @return The {@link FightRecord} that contains every action of this fight.
+         * @throws IllegalStateException If this fight logic has already been performed.
+         */
+        @Nonnull
+        public FightRecord fight(@Nonnull final Player attacker) {
+            if (!fightEntries.isEmpty())
+                throw new IllegalStateException("This fight logic has already been performed !");
+
             // Collect allies and enemies
             final LinkedList<Warrior> allies = cell.getWarriors().stream()
                     .filter(w -> w.getOwner().equals(attacker))
@@ -193,25 +279,32 @@ public class GameLogic {
             Collections.shuffle(allies);
             Collections.shuffle(enemies);
 
-            // Display regardless to the side of the player
-            commonOutputHandler.displayLogStart(cell);
-            if (attacker.getSide() == Player.Side.LEFT)
-                commonOutputHandler.displayWarriors(allies, enemies);
-            else
-                commonOutputHandler.displayWarriors(enemies, allies);
+            // Store array representation for the record
+            final Warrior[] attackersArray = allies.toArray(Warrior[]::new);
+            final Warrior[] defendersArray = enemies.toArray(Warrior[]::new);
 
             // Attackers
             attack(allies, enemies);
             // Defenders response
             attack(enemies, allies);
 
-            commonOutputHandler.displayLogEnd(cell);
+            // Build fight record
+            return new FightRecord(cell.getPosition(), attacker.getSide(),
+                    attackersArray, defendersArray, fightEntries.toArray(FightEntry[]::new));
         }
 
+        /**
+         * Perform the logic of one pass of the fight.
+         *
+         * @param attackers - The attackers of this pass.
+         * @param defenders - The defenders of this pass.
+         */
         @SuppressWarnings("ConstantConditions")
-        private void attack(@Nonnull final Queue<Warrior> attackers, @Nonnull final Queue<Warrior> defenders) {
+        private void attack(@Nonnull final LinkedList<Warrior> attackers, @Nonnull final LinkedList<Warrior> defenders) {
             // For each attacker
-            for (Warrior attacker : attackers) {
+            for (int attackerI = 0; attackerI < attackers.size(); attackerI++) {
+                final Warrior attacker = attackers.get(attackerI);
+
                 // Compute damages
                 final int damage = Dice.diceRoll(3, attacker.getStrength());
 
@@ -219,51 +312,18 @@ public class GameLogic {
                 if (!defenders.isEmpty()) {
                     // Hit
                     defenders.peek().takeDamage(damage);
-                    commonOutputHandler.displayLogHit(attacker, defenders.peek(), damage);
+                    fightEntries.add(new FightEntry.Hit(attacker.getOwner().getSide(),
+                            defenders.size() - 1, attackerI, damage)
+                    );
 
                     // Check dead
                     if (!defenders.peek().isAlive()) {
                         final Warrior dead = defenders.poll();
-                        commonOutputHandler.displayLogDead(dead);
+                        fightEntries.add(new FightEntry.Dead(dead.getOwner().getSide(), defenders.size()));
                         deadWarriors.add(dead);
                     }
                 }
             }
-        }
-    }
-
-    private class CommonOutputHandler implements FightOutputHandler {
-
-        private final FightOutputHandler[] handlers;
-
-        public CommonOutputHandler(@Nonnull final FightOutputHandler... foh) {
-            handlers = foh;
-        }
-
-        @Override
-        public void displayLogStart(@Nonnull final BoardCell cell) {
-            for (FightOutputHandler handler : handlers) handler.displayLogStart(cell);
-        }
-
-        @Override
-        public void displayLogEnd(@Nonnull final BoardCell cell) {
-            for (FightOutputHandler handler : handlers) handler.displayLogEnd(cell);
-        }
-
-        @Override
-        public void displayWarriors(@Nonnull final List<Warrior> left, @Nonnull final List<Warrior> right) {
-            for (FightOutputHandler handler : handlers) handler.displayWarriors(left, right);
-        }
-
-        @Override
-        public void displayLogHit(@Nonnull final Warrior attacker, @Nonnull final Warrior defender, final int damage) {
-            for (FightOutputHandler handler : handlers)
-                handler.displayLogHit(attacker, defender, damage);
-        }
-
-        @Override
-        public void displayLogDead(@Nonnull final Warrior warrior) {
-            for (FightOutputHandler handler : handlers) handler.displayLogDead(warrior);
         }
     }
 }

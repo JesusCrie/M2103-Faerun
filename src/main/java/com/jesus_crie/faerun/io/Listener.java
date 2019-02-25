@@ -13,21 +13,21 @@ public interface Listener {
     default void onEvent(@Nonnull final Event e) {
         if (e instanceof WelcomeEvent)
             onWelcome((WelcomeEvent) e);
-        else if (e instanceof SettingsReadyEvent)
-            onSettingsReady((SettingsReadyEvent) e);
         else if (e instanceof NewRoundEvent)
             onNewRound((NewRoundEvent) e);
         else if (e instanceof FightEvent)
             onFight((FightEvent) e);
+        else if (e instanceof GoodbyeEvent)
+            onGoodbye((GoodbyeEvent) e);
         else
             throw new IllegalArgumentException("Unknown event !");
     }
 
-    default void onWelcome(@Nonnull final WelcomeEvent e) {}
+    void onWelcome(@Nonnull final WelcomeEvent e);
 
-    default void onSettingsReady(@Nonnull final SettingsReadyEvent e) {}
+    void onNewRound(@Nonnull final NewRoundEvent e);
 
-    default void onNewRound(@Nonnull final NewRoundEvent e) {}
+    void onFight(@Nonnull final FightEvent e);
 
-    default void onFight(@Nonnull final FightEvent e) {}
+    void onGoodbye(@Nonnull final GoodbyeEvent e);
 }

@@ -1,5 +1,7 @@
 package com.jesus_crie.faerun.event;
 
+import com.jesus_crie.faerun.model.Side;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -18,33 +20,19 @@ public final class NewRoundEvent implements Event {
     /**
      * The name of the active player.
      */
-    private final String playerSide;
+    private final String playerName;
 
     /**
-     * The cells owned by the left player.
+     * The side of all cells of the board.
      */
-    private final int[] cellsLeft;
-
-    /**
-     * The cells owned by the right player.
-     */
-    private final int[] cellsRight;
-
-    /**
-     * The cells where they are both players.
-     */
-    private final int[] fightCells;
+    private final Side[] cells;
 
     public NewRoundEvent(final int round,
-                         @Nonnull final String playerSide,
-                         final int[] cellsLeft,
-                         final int[] cellsRight,
-                         final int[] fightCells) {
+                         @Nonnull final String playerName,
+                         @Nonnull final Side[] cells) {
         this.round = round;
-        this.playerSide = playerSide;
-        this.cellsLeft = cellsLeft;
-        this.cellsRight = cellsRight;
-        this.fightCells = fightCells;
+        this.playerName = playerName;
+        this.cells = cells;
     }
 
     public int getRound() {
@@ -53,18 +41,11 @@ public final class NewRoundEvent implements Event {
 
     @Nonnull
     public String getPlayerName() {
-        return playerSide;
+        return playerName;
     }
 
-    public int[] getCellsLeft() {
-        return cellsLeft;
-    }
-
-    public int[] getCellsRight() {
-        return cellsRight;
-    }
-
-    public int[] getFightCells() {
-        return fightCells;
+    @Nonnull
+    public Side[] getCells() {
+        return cells;
     }
 }

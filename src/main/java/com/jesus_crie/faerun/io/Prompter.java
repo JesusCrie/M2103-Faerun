@@ -1,6 +1,6 @@
 package com.jesus_crie.faerun.io;
 
-import com.jesus_crie.faerun.event.AskBoardSettingsEvent;
+import com.jesus_crie.faerun.event.AskSettingsEvent;
 import com.jesus_crie.faerun.event.AskEvent;
 import com.jesus_crie.faerun.event.AskQueueEvent;
 import com.jesus_crie.faerun.event.AskUsernameEvent;
@@ -17,8 +17,8 @@ public interface Prompter {
     default <T> T onAsk(@Nonnull final AskEvent<T> e) {
         if (e instanceof AskUsernameEvent)
             return (T) onAskUsername((AskUsernameEvent) e);
-        else if (e instanceof AskBoardSettingsEvent)
-            return (T) onAskBoardSettings((AskBoardSettingsEvent) e);
+        else if (e instanceof AskSettingsEvent)
+            return (T) onAskSettings((AskSettingsEvent) e);
         else if (e instanceof AskQueueEvent)
             return (T) onAskQueue((AskQueueEvent) e);
         else
@@ -29,7 +29,7 @@ public interface Prompter {
     String onAskUsername(@Nonnull final AskUsernameEvent e);
 
     @Nonnull
-    BoardSettings onAskBoardSettings(@Nonnull final AskBoardSettingsEvent e);
+    BoardSettings onAskSettings(@Nonnull final AskSettingsEvent e);
 
     @Nonnull
     Map<Class<? extends Warrior>, Integer> onAskQueue(@Nonnull final AskQueueEvent e);

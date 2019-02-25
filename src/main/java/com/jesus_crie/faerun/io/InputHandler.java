@@ -5,6 +5,7 @@ import com.jesus_crie.faerun.model.warrior.Warrior;
 
 import java.util.Map;
 
+@Deprecated
 public interface InputHandler {
 
     boolean provideGamemode();

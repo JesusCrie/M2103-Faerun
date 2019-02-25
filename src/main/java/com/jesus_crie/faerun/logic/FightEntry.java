@@ -1,6 +1,6 @@
 package com.jesus_crie.faerun.logic;
 
-import com.jesus_crie.faerun.model.Player;
+import com.jesus_crie.faerun.model.Side;
 
 import javax.annotation.Nonnull;
 import java.io.Serializable;
@@ -27,12 +27,12 @@ public interface FightEntry extends Serializable {
 
         private static final long serialVersionUID = 6503266072216678593L;
 
-        private final Player.Side attackerSide;
+        private final Side attackerSide;
         private final int attackerIndex;
         private final int defenderIndex;
         private final int damage;
 
-        public Hit(@Nonnull final Player.Side attackerSide,
+        public Hit(@Nonnull final Side attackerSide,
                    final int attackerIndex,
                    final int defenderIndex,
                    final int damage) {
@@ -64,7 +64,7 @@ public interface FightEntry extends Serializable {
             throw new UnsupportedOperationException();
         }
 
-        public Player.Side getAttackerSide() {
+        public Side getAttackerSide() {
             return attackerSide;
         }
 
@@ -88,10 +88,10 @@ public interface FightEntry extends Serializable {
 
         private static final long serialVersionUID = 3875412333491320608L;
 
-        private final Player.Side deadSide;
+        private final Side deadSide;
         private final int warriorIndex;
 
-        public Dead(@Nonnull final Player.Side deadSide, final int warriorIndex) {
+        public Dead(@Nonnull final Side deadSide, final int warriorIndex) {
             this.deadSide = deadSide;
             this.warriorIndex = warriorIndex;
         }
@@ -118,7 +118,7 @@ public interface FightEntry extends Serializable {
             return this;
         }
 
-        public Player.Side getDeadSide() {
+        public Side getDeadSide() {
             return deadSide;
         }
 

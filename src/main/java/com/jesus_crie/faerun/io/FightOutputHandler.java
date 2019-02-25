@@ -6,6 +6,7 @@ import com.jesus_crie.faerun.model.warrior.Warrior;
 import javax.annotation.Nonnull;
 import java.util.List;
 
+@Deprecated
 public interface FightOutputHandler {
 
     void displayLogStart(@Nonnull final BoardCell cell);

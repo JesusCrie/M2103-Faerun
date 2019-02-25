@@ -1,10 +1,11 @@
 package com.jesus_crie.faerun.io;
 
 import com.jesus_crie.faerun.event.FightEvent;
+import com.jesus_crie.faerun.event.GoodbyeEvent;
 import com.jesus_crie.faerun.event.NewRoundEvent;
-import com.jesus_crie.faerun.event.SettingsReadyEvent;
 import com.jesus_crie.faerun.event.WelcomeEvent;
 import com.jesus_crie.faerun.logic.FightEntry;
+import com.jesus_crie.faerun.model.Side;
 import com.jesus_crie.faerun.model.board.BoardSettings;
 import com.jesus_crie.faerun.model.warrior.Warrior;
 
@@ -38,27 +39,17 @@ public class ConsoleListener implements Listener {
     }
 
     @Override
-    public void onSettingsReady(@Nonnull final SettingsReadyEvent e) {
-        if (settings != null)
-            settings = e.getSettings();
-
-        out.println("Game settings:");
-        out.println("- Board size: " + settings.getSize());
-        out.println("- Unit cost multiplier: " + settings.getBaseCost());
-        out.println("- Dices: " + settings.getDiceAmount());
-        out.println("- Initial resources: " + settings.getInitialResources());
-        out.println("- Resources/round: " + settings.getResourcesPerRound());
-    }
-
-    @Override
     public void onNewRound(@Nonnull final NewRoundEvent e) {
         // Header
         out.printf("--- Round %d | Player %s ---\n", e.getRound(), e.getPlayerName());
 
+        // Query the cells side
+        final Side[] cells = e.getCells();
+
         // Progression
-        float amountCells = settings.getSize();
-        float amountLeft = e.getCellsLeft().length;
-        float amountRight = e.getCellsRight().length;
+        float amountCells = cells.length;
+        float amountLeft = Arrays.stream(cells).filter(s -> s == Side.LEFT).count();
+        float amountRight = Arrays.stream(cells).filter(s -> s == Side.RIGHT).count();
         out.printf("Left: %f%% || Right: %f%%\n", amountLeft / amountCells * 100f, amountRight / amountCells * 100f);
 
         // Board
@@ -67,21 +58,21 @@ public class ConsoleListener implements Listener {
         boardStr.append("Castle LEFT ");
 
         // Build cell type
-        final char[] cellTypes = new char[settings.getSize()];
-        // Init cells
-        for (int cell = 0; cell < cellTypes.length; cell++)
-            cellTypes[cell] = '_';
-        // Symbol left player
-        for (int cell : e.getCellsLeft())
-            cellTypes[cell] = 'X';
-        // Symbol right player
-        for (int cell : e.getCellsRight())
-            cellTypes[cell] = 'O';
-        // Symbol conflict
-        for (int cell : e.getFightCells())
-            cellTypes[cell] = '|';
+        Arrays.stream(cells).map(s -> {
+                    switch (s) {
+                        case LEFT:
+                            return 'X';
+                        case RIGHT:
+                            return 'O';
+                        case BOTH:
+                            return '|';
+                        case EMPTY:
+                        default:
+                            return '_';
+                    }
+                }
+        ).forEachOrdered(boardStr::append);
 
-        boardStr.append(cellTypes);
         boardStr.append(" Castle RIGHT");
 
         // Display
@@ -141,5 +132,10 @@ public class ConsoleListener implements Listener {
 
 
         out.println("-- Fight ended");
+    }
+
+    @Override
+    public void onGoodbye(@Nonnull final GoodbyeEvent e) {
+        out.println("--- Game ended, winner: " + e.getWinner() + " ---");
     }
 }

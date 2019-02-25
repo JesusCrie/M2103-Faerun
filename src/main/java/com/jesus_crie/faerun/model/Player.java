@@ -2,13 +2,8 @@ package com.jesus_crie.faerun.model;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.Serializable;
 
 public class Player {
-
-    public enum Side implements Serializable {
-        LEFT, RIGHT, BOTH, EMPTY
-    }
 
     private final String pseudo;
     private final Side side;

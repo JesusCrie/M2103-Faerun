@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
  */
 public final class FightEvent implements Event {
 
-    private static final long serialVersionUID = 7392911604467117618L;
+    private static final long serialVersionUID = -1063882828977132775L;
 
     private final FightRecord record;
 

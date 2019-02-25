@@ -1,5 +1,6 @@
 package com.jesus_crie.faerun.network;
 
+import com.jesus_crie.faerun.event.*;
 import com.jesus_crie.faerun.network.internal.ClientNetHandler;
 import com.jesus_crie.faerun.network.internal.ServerNetHandler;
 
@@ -55,40 +56,71 @@ public final class FaerunProtocol {
             return handler.getClient().getPort();
         }
 
-        public void waitClientAndSetup() {
+        /**
+         * Perform the initial setup of the connection setup.
+         * Wait for a client to connect and ask for its username and returns it.
+         *
+         * @return The username of the remote client.
+         */
+        @Nonnull
+        public String waitClientAndSetup() {
             // Wait socket
             handler.waitForClient();
 
             // Wait connect
+            try {
+                final ConnectEvent event = (ConnectEvent) handler.receiveEvent();
+            } catch (ClassCastException e) {
+                throw new IllegalStateException("Protocol error: not a ConnectEvent !", e);
+            }
 
-            // Ask username
-
-            // Wait username
-
-            // RDY
+            // Ask username & RDY
+            return askEvent(EventFactory.buildAskUsernameEvent());
         }
 
-        public void dispatchEvent(@Nonnull final Serializable event) {
-            // Serialize and write socket
+        /**
+         * Used to dispatch an event to the client.
+         *
+         * @param event - The event to dispatch.
+         */
+        public void dispatchEvent(@Nonnull final Event event) {
+            if (!handler.sendEvent(event))
+                throw new IllegalStateException("Failed to send event through the socket: " + event);
         }
 
+        /**
+         * Used to dispatch an event that need a response.
+         *
+         * @param request - The request event.
+         * @param <T>     - The type of object to wait for.
+         * @return The object read from the remote.
+         * @throws ClassCastException If the read object is not what we expect.
+         */
         @Nonnull
-        public Object askEvent(@Nonnull final Serializable request) {
+        public <T extends Serializable> T askEvent(@Nonnull final AskEvent<T> request) {
             // Serialize and write socket
+            dispatchEvent(request);
 
-            // Wait for response
-
-            // Deserialize response
-            return null;
+            // Wait for response and return it.
+            try {
+                return handler.receivePayload();
+            } catch (ClassCastException e) {
+                throw new IllegalStateException("Protocol Error: the retrieved payload is of the wrong type !", e);
+            }
         }
 
+        /**
+         * Notify the client that the connection will be closed.
+         */
         public void teardown() {
             // Send teardown
+            dispatchEvent(EventFactory.buildTeardownEvent());
         }
 
         @Override
         public void close() {
             // Close socket and streams
+            handler.close();
         }
     }
 
@@ -107,31 +139,53 @@ public final class FaerunProtocol {
             }
         }
 
+        /**
+         * Setup the connection with the server.
+         * @param username - The username to use.
+         */
         public void setup(@Nonnull final String username) {
             // Send connect
+            dispatchEvent(EventFactory.buildConnectEvent());
 
             // Wait ask username
+            final AskUsernameEvent event = (AskUsernameEvent) waitEvent();
 
             // Send username
+            sendResponsePayload(username);
+
+            // RDY
         }
 
         @Nonnull
-        public Object waitEvent() {
+        public Event waitEvent() {
             // Read until an event arrive
-            return null;
+            return handler.receiveEvent();
         }
 
-        public void respondAskEvent(@Nonnull final Serializable responseEvent) {
-            // Respond to an ask event
+        /**
+         * Used to dispatch an event to the server.
+         *
+         * @param event - The event to dispatch.
+         */
+        public void dispatchEvent(@Nonnull final Event event) {
+            if (!handler.sendEvent(event))
+                throw new IllegalStateException("Failed to send event through the socket: " + event);
+        }
+
+        public void sendResponsePayload(@Nonnull final Serializable payload) {
+            if (!handler.sendPayload(payload))
+                throw new IllegalStateException("Failed to send response payload through the socket !");
         }
 
         public void teardown() {
             // Send teardown
+            dispatchEvent(EventFactory.buildTeardownEvent());
         }
 
         @Override
         public void close() {
             // Close socket and streams
+            handler.close();
         }
     }
 }

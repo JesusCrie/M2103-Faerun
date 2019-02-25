@@ -3,6 +3,7 @@ package com.jesus_crie.faerun.io;
 import com.jesus_crie.faerun.utils.Pair;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.PrintStream;
 import java.util.Scanner;
 import java.util.function.Function;
@@ -22,10 +23,11 @@ public class ConsoleUtils {
      */
     @Nonnull
     public static <T> T ask(@Nonnull final Scanner in, @Nonnull final PrintStream out,
-                            @Nonnull final String title, @Nonnull final String prompt,
+                            @Nullable final String title, @Nonnull final String prompt,
                             @Nonnull final Function<String, T> mapper) {
 
-        out.println(title);
+        if (title != null)
+            out.println(title);
 
         T parsed = null;
         do {
@@ -33,7 +35,8 @@ public class ConsoleUtils {
                 out.print(prompt);
 
                 parsed = mapper.apply(in.nextLine());
-            } catch (Exception ignore) {
+            } catch (Exception e) {
+                out.println(); // Jump line to prevent spam
             }
         } while (parsed == null);
 
@@ -50,22 +53,23 @@ public class ConsoleUtils {
      * @return The integer supplied by the user.
      */
     public static int askInt(@Nonnull final Scanner in, @Nonnull final PrintStream out,
-                             @Nonnull final String title, @Nonnull final String prompt) {
+                             @Nullable final String title, @Nonnull final String prompt) {
         return ask(in, out, title, prompt, Integer::parseInt);
     }
 
     /**
-     * Ask for an integer between in min (inclusive) and max (exclusive)
+     * Ask for an integer between min (inclusive) and max (exclusive).
+     *
      * @param in     - The input where to read from.
      * @param out    - The output where to print to.
      * @param title  - The title printed before the prompt.
      * @param prompt - The prompt.
      * @param min    - Minimum of the number, inclusive.
      * @param max    - Maximum of the number, exclusive.
-     * @return
+     * @return An int between min and max.
      */
     public static int askInt(@Nonnull final Scanner in, @Nonnull final PrintStream out,
-                             @Nonnull final String title, @Nonnull final String prompt,
+                             @Nullable final String title, @Nonnull final String prompt,
                              final int min, final int max) {
         return ask(in, out, title, prompt,
                 s -> {
@@ -78,12 +82,44 @@ public class ConsoleUtils {
     }
 
     /**
+     * Ask for an integer between min (inclusive) and max (exclusive).
+     * If the input is errored, returns the default value.
+     *
+     * @param in     - The input where to read from.
+     * @param out    - The output where to print to.
+     * @param title  - The title printed before the prompt.
+     * @param prompt - The prompt.
+     * @param min    - Minimum of the number, inclusive.
+     * @param max    - Maximum of the number, exclusive.
+     * @param def    - The default value.
+     * @return An integer between min and max or the default value.
+     */
+    public static int askInt(@Nonnull final Scanner in, @Nonnull final PrintStream out,
+                             @Nullable final String title, @Nonnull final String prompt,
+                             final int min, final int max, final int def) {
+        return ask(in, out, title, prompt,
+                s -> {
+                    try {
+                        final int i = Integer.parseInt(s);
+                        if (i < min || i >= max)
+                            return def;
+                        else return i;
+                    } catch (NumberFormatException e) {
+                        return def;
+                    }
+                }
+        );
+    }
+
+    /**
      * Create a menu and ask the user to choose an action and execute the associated {@link Runnable}.
+     *
      * @param in      - The input where to read from.
      * @param out     - The output where to print to.
      * @param title   - The title printed before the menu.
      * @param options - The options, the name of the option associated with its {@link Runnable}.
      */
+    @SafeVarargs
     public static void createMenu(@Nonnull final Scanner in, @Nonnull final PrintStream out,
                                   @Nonnull final String title,
                                   @Nonnull final Pair<String, Runnable>... options) {
@@ -99,7 +135,7 @@ public class ConsoleUtils {
                     .append("\n");
         }
 
-        // Ask what option to choose.
+        // Ask what option to choose
         final int actionIndex = askInt(in, out, titleB.toString(), "> ",
                 1, options.length + 1);
 

@@ -7,6 +7,7 @@ import com.jesus_crie.faerun.model.board.Castle;
 
 import javax.annotation.Nonnull;
 
+@Deprecated
 public interface OutputHandler {
 
     FightOutputHandler getFightOutputHandler();
