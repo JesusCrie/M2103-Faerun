@@ -48,6 +48,7 @@ public final class IOCombiner {
 
     /**
      * Dispatch an {@link AskEvent} to the prompter for a return.
+     *
      * @param event - The event to dispatch.
      * @param <T>   - The type of the ask event.
      * @return The mapped object.
@@ -58,6 +59,7 @@ public final class IOCombiner {
 
     /**
      * Factory method.
+     *
      * @param in  - The prompter to use.
      * @param out - The listener to use.
      * @return A new IOCombiner with the given I/O classes.

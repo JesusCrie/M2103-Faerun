@@ -3,10 +3,14 @@ package com.jesus_crie.faerun.model.warrior;
 import com.jesus_crie.faerun.model.Player;
 
 import javax.annotation.Nonnull;
-import java.io.Closeable;
 import java.io.Serializable;
 
+/**
+ * Represent a warrior and its characteristics.
+ */
 public abstract class Warrior implements Serializable, Cloneable {
+
+    private static final long serialVersionUID = 584655857270813881L;
 
     private transient final Player owner;
     protected transient int strength = 10;

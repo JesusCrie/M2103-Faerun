@@ -8,7 +8,6 @@ import javax.annotation.Nonnull;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.InetAddress;
 
 /**
  * Contains the protocol used to communicate between two instances of the game across the network.
@@ -65,7 +64,9 @@ public final class FaerunProtocol {
         @Nonnull
         public String waitClientAndSetup() {
             // Wait socket
-            handler.waitForClient();
+            if (!handler.waitForClient()) {
+                throw new IllegalStateException("Server socket crashed while waiting for a client !");
+            }
 
             // Wait connect
             try {
@@ -141,6 +142,7 @@ public final class FaerunProtocol {
 
         /**
          * Setup the connection with the server.
+         *
          * @param username - The username to use.
          */
         public void setup(@Nonnull final String username) {
@@ -156,6 +158,11 @@ public final class FaerunProtocol {
             // RDY
         }
 
+        /**
+         * Block until an event is read from the socket.
+         *
+         * @return The event that was read.
+         */
         @Nonnull
         public Event waitEvent() {
             // Read until an event arrive
@@ -172,11 +179,19 @@ public final class FaerunProtocol {
                 throw new IllegalStateException("Failed to send event through the socket: " + event);
         }
 
+        /**
+         * Send back an object in response to an AskEvent.
+         *
+         * @param payload - The response payload.
+         */
         public void sendResponsePayload(@Nonnull final Serializable payload) {
             if (!handler.sendPayload(payload))
                 throw new IllegalStateException("Failed to send response payload through the socket !");
         }
 
+        /**
+         * Notify the server that the connection need to be closed.
+         */
         public void teardown() {
             // Send teardown
             dispatchEvent(EventFactory.buildTeardownEvent());

@@ -7,6 +7,9 @@ import javax.annotation.Nonnull;
 import java.io.*;
 import java.net.Socket;
 
+/**
+ * Abstracts the low level socket and I/O streams associated with it.
+ */
 public abstract class NetHandler implements Closeable {
 
     protected Socket client;
@@ -24,7 +27,7 @@ public abstract class NetHandler implements Closeable {
     /**
      * Send a payload over the network through the socket.
      *
-     * @param payload - The paylaod to send.
+     * @param payload - The payload to send.
      * @return True of the payload has been successfully sent through the socket, otherwise False.
      */
     public boolean sendPayload(@Nonnull final Serializable payload) {

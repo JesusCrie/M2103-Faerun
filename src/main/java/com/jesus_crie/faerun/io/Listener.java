@@ -4,10 +4,14 @@ import com.jesus_crie.faerun.event.*;
 
 import javax.annotation.Nonnull;
 
+/**
+ * Handles the output part of the program, every event related to the game is sent here.
+ */
 public interface Listener {
 
     /**
      * When a event is received, it goes there and is dispatched to the correct handler.
+     *
      * @param e - The event that was triggered.
      */
     default void onEvent(@Nonnull final Event e) {

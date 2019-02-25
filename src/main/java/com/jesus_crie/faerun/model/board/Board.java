@@ -8,6 +8,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Represent the board where the game take place.
+ * Handle all most of the "static" part of the game (not the logic).
+ * Contains the castles and cells.
+ */
 public class Board {
 
     private final BoardSettings settings;
@@ -29,16 +34,29 @@ public class Board {
             cells.add(new BoardCell(i));
     }
 
+    /**
+     * @return The settings associated with this board.
+     */
     @Nonnull
     public BoardSettings getSettings() {
         return settings;
     }
 
+    /**
+     * Get the cell at the given position
+     *
+     * @param position - The position of the cell to get.
+     * @return The corresponding cell on the board.
+     */
     @Nonnull
-    public BoardCell getCell(int position) {
+    public BoardCell getCell(final int position) {
         return cells.get(position);
     }
 
+    /**
+     * @param p - The owner of the castle.
+     * @return The castle of the given player.
+     */
     @Nonnull
     public Castle getCastle(@Nonnull final Player p) {
         if (!castles.containsKey(p))

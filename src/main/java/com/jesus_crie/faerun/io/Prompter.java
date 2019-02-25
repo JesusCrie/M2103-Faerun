@@ -9,6 +9,9 @@ import javax.annotation.Nonnull;
 import java.io.Serializable;
 import java.util.Map;
 
+/**
+ * Handles the input part of the program, any value that need to be supplied by the user passes through here.
+ */
 public interface Prompter {
 
     @SuppressWarnings("unchecked")

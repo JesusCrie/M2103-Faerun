@@ -1,7 +1,6 @@
 package com.jesus_crie.faerun.event;
 
 import com.jesus_crie.faerun.logic.FightRecord;
-import com.jesus_crie.faerun.model.Player;
 import com.jesus_crie.faerun.model.Side;
 import com.jesus_crie.faerun.model.board.Board;
 import com.jesus_crie.faerun.model.board.BoardCell;

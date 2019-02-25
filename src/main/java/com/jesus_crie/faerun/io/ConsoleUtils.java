@@ -8,6 +8,9 @@ import java.io.PrintStream;
 import java.util.Scanner;
 import java.util.function.Function;
 
+/**
+ * Utility methods to interact with the user through the console.
+ */
 public class ConsoleUtils {
 
     /**
