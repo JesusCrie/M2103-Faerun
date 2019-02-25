@@ -32,6 +32,7 @@ public abstract class NetHandler implements Closeable {
 
         try {
             toClient.writeObject(payload);
+            toClient.flush();
             return true;
         } catch (IOException e) {
             return false;

@@ -4,13 +4,13 @@ import com.jesus_crie.faerun.model.warrior.Warrior;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
-import java.util.Map;
+import java.util.HashMap;
 import java.util.Objects;
 
 /**
  * Ask the player to choose what he want to train.
  */
-public final class AskQueueEvent implements AskEvent<Map<Class<? extends Warrior>, Integer>> {
+public final class AskQueueEvent implements AskEvent<HashMap<Class<? extends Warrior>, Integer>> {
 
     private static final long serialVersionUID = -945873319683978188L;
 

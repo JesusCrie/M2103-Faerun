@@ -13,6 +13,10 @@ public class ServerNetHandler extends NetHandler {
         server = new ServerSocket(0);
     }
 
+    public int getPort() {
+        return server.getLocalPort();
+    }
+
     public boolean waitForClient() {
         try {
             client = server.accept();

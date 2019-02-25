@@ -39,7 +39,10 @@ public final class GameLogic {
      * @param event - The event to dispatch.
      */
     private void dispatchToEveryone(@Nonnull final Event event) {
-        players.forEach((p, io) -> io.dispatch(event));
+        players.forEach((p, io) -> {
+            System.err.println("Dispatch to " + p);
+            io.dispatch(event);
+        });
     }
 
     /**

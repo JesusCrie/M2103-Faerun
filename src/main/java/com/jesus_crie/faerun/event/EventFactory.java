@@ -39,6 +39,11 @@ public final class EventFactory {
     }
 
     @Nonnull
+    public static ServerReadyEvent buildServerReadyEvent(final int port) {
+        return new ServerReadyEvent(port);
+    }
+
+    @Nonnull
     public static GoodbyeEvent buildGoodbyeEvent(@Nonnull final String winner) {
         return new GoodbyeEvent(winner);
     }
@@ -51,6 +56,11 @@ public final class EventFactory {
     @Nonnull
     public static AskUsernameEvent buildAskUsernameEvent() {
         return new AskUsernameEvent();
+    }
+
+    @Nonnull
+    public static AskRemoteAddress buildAskRemoteAddress() {
+        return new AskRemoteAddress();
     }
 
     @Nonnull

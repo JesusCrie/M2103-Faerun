@@ -44,6 +44,21 @@ public class ConsoleUtils {
     }
 
     /**
+     * Ask for a string and returns it.
+     *
+     * @param in     - The input where to read from.
+     * @param out    - The output where to print to.
+     * @param title  - The title printed before the prompt.
+     * @param prompt - The prompt, redisplayed each time the input is wrong.
+     * @return The string provided by the user.
+     */
+    @Nonnull
+    public static String askString(@Nonnull final Scanner in, @Nonnull final PrintStream out,
+                                   @Nullable final String title, @Nonnull final String prompt) {
+        return ask(in, out, title, prompt, s -> s);
+    }
+
+    /**
      * Ask for any integer number.
      *
      * @param in     - The input where to read from.

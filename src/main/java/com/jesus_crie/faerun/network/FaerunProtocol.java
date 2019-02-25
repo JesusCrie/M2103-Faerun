@@ -33,7 +33,7 @@ public final class FaerunProtocol {
      * @param port    - The port to connect to.
      * @return A new instance of the client protocol.
      */
-    public static ProtocolClient asClient(@Nonnull final InetAddress address, final int port) {
+    public static ProtocolClient asClient(@Nonnull final String address, final int port) {
         return new ProtocolClient(address, port);
     }
 
@@ -53,7 +53,7 @@ public final class FaerunProtocol {
         }
 
         public int getSelectedPort() {
-            return handler.getClient().getPort();
+            return handler.getPort();
         }
 
         /**
@@ -131,7 +131,7 @@ public final class FaerunProtocol {
 
         private final ClientNetHandler handler;
 
-        public ProtocolClient(@Nonnull final InetAddress address, final int port) {
+        public ProtocolClient(@Nonnull final String address, final int port) {
             try {
                 handler = new ClientNetHandler(address, port);
             } catch (IOException e) {

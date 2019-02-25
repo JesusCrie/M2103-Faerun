@@ -1,6 +1,7 @@
 package com.jesus_crie.faerun.io;
 
 import com.jesus_crie.faerun.event.AskQueueEvent;
+import com.jesus_crie.faerun.event.AskRemoteAddress;
 import com.jesus_crie.faerun.event.AskSettingsEvent;
 import com.jesus_crie.faerun.event.AskUsernameEvent;
 import com.jesus_crie.faerun.model.board.BoardSettings;
@@ -10,6 +11,7 @@ import com.jesus_crie.faerun.utils.Pair;
 import javax.annotation.Nonnull;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.net.InetSocketAddress;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -115,5 +117,15 @@ public class ConsolePrompter implements Prompter {
                 .collect(HashMap::new,
                         (map, entry) -> map.put(entry.getKey(), entry.getValue().get()),
                         HashMap::putAll);
+    }
+
+    @Nonnull
+    @Override
+    public Pair<String, Integer> onAskRemoteAddress(@Nonnull final AskRemoteAddress e) {
+        out.println("Remote configuration");
+        final String host = ConsoleUtils.askString(in, out, null, " - Host ? ");
+        final int port = ConsoleUtils.askInt(in, out, null, " - Port ? [1-65635] ", 1, 65635);
+
+        return Pair.of(host, port);
     }
 }

@@ -13,6 +13,8 @@ public interface Listener {
     default void onEvent(@Nonnull final Event e) {
         if (e instanceof WelcomeEvent)
             onWelcome((WelcomeEvent) e);
+        else if (e instanceof ServerReadyEvent)
+            onServerReady((ServerReadyEvent) e);
         else if (e instanceof NewRoundEvent)
             onNewRound((NewRoundEvent) e);
         else if (e instanceof FightEvent)
@@ -24,6 +26,8 @@ public interface Listener {
     }
 
     void onWelcome(@Nonnull final WelcomeEvent e);
+
+    void onServerReady(@Nonnull final ServerReadyEvent e);
 
     void onNewRound(@Nonnull final NewRoundEvent e);
 

@@ -1,9 +1,6 @@
 package com.jesus_crie.faerun.io;
 
-import com.jesus_crie.faerun.event.FightEvent;
-import com.jesus_crie.faerun.event.GoodbyeEvent;
-import com.jesus_crie.faerun.event.NewRoundEvent;
-import com.jesus_crie.faerun.event.WelcomeEvent;
+import com.jesus_crie.faerun.event.*;
 import com.jesus_crie.faerun.logic.FightEntry;
 import com.jesus_crie.faerun.model.Side;
 import com.jesus_crie.faerun.model.board.BoardSettings;
@@ -34,6 +31,11 @@ public class ConsoleListener implements Listener {
     @Override
     public void onWelcome(@Nonnull final WelcomeEvent e) {
         out.println("--- Welcome to Faerun battle ! ---");
+    }
+
+    @Override
+    public void onServerReady(@Nonnull final ServerReadyEvent e) {
+        out.println("-- Server ready, listening at port " + e.getPort());
     }
 
     @Override

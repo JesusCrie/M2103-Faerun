@@ -4,6 +4,7 @@ import com.jesus_crie.faerun.event.AskEvent;
 import com.jesus_crie.faerun.event.Event;
 
 import javax.annotation.Nonnull;
+import java.io.Serializable;
 
 /**
  * Combine a {@link Prompter} and a {@link Listener} and can dispatch some events to each of them.
@@ -51,7 +52,7 @@ public final class IOCombiner {
      * @param <T>   - The type of the ask event.
      * @return The mapped object.
      */
-    public <T> T dispatch(@Nonnull final AskEvent<T> event) {
+    public <T extends Serializable> T dispatch(@Nonnull final AskEvent<T> event) {
         return in.onAsk(event);
     }
 
