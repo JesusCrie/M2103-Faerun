@@ -69,13 +69,12 @@ public final class GameLogic {
             roundNumber++;
 
             // Dispatch new round
-            dispatchToEveryone(
-                    EventFactory.buildNewRoundEvent(roundNumber, current.getPseudo(), boardLogic.getBoard())
-            );
+            dispatchToEveryone(EventFactory.buildNewRoundEvent(roundNumber, current.getPseudo(), boardLogic.getBoard()));
 
         } while (!performPlayerRound(current));
 
         // Return the winning player
+        dispatchToEveryone(EventFactory.buildGoodbyeEvent(current.getPseudo()));
         return current;
     }
 
@@ -198,9 +197,7 @@ public final class GameLogic {
         cell.removeWarriors(fight.getDeadWarriors());
 
         // Event
-        dispatchToEveryone(
-                EventFactory.buildFightEvent(record)
-        );
+        dispatchToEveryone(EventFactory.buildFightEvent(record));
     }
 
     /**
@@ -267,26 +264,26 @@ public final class GameLogic {
             if (!fightEntries.isEmpty())
                 throw new IllegalStateException("This fight logic has already been performed !");
 
-            // Collect allies and enemies
-            final LinkedList<Warrior> allies = cell.getWarriors().stream()
+            // Collect attackers and defenders
+            final LinkedList<Warrior> attackers = cell.getWarriors().stream()
                     .filter(w -> w.getOwner().equals(attacker))
                     .collect(LinkedList::new, LinkedList::add, LinkedList::addAll);
-            final LinkedList<Warrior> enemies = cell.getWarriors().stream()
+            final LinkedList<Warrior> defenders = cell.getWarriors().stream()
                     .filter(w -> !w.getOwner().equals(attacker))
                     .collect(LinkedList::new, LinkedList::add, LinkedList::addAll);
 
             // Shuffle dat
-            Collections.shuffle(allies);
-            Collections.shuffle(enemies);
+            Collections.shuffle(attackers);
+            Collections.shuffle(defenders);
 
-            // Store array representation for the record
-            final Warrior[] attackersArray = allies.toArray(Warrior[]::new);
-            final Warrior[] defendersArray = enemies.toArray(Warrior[]::new);
+            // Copy attackers and defenders for the record
+            final Warrior[] attackersArray = Arrays.copyOf(attackers.toArray(Warrior[]::new), attackers.size());
+            final Warrior[] defendersArray = Arrays.copyOf(defenders.toArray(Warrior[]::new), defenders.size());
 
             // Attackers
-            attack(allies, enemies);
+            attack(attackers, defenders);
             // Defenders response
-            attack(enemies, allies);
+            attack(defenders, attackers);
 
             // Build fight record
             return new FightRecord(cell.getPosition(), attacker.getSide(),
@@ -313,7 +310,7 @@ public final class GameLogic {
                     // Hit
                     defenders.peek().takeDamage(damage);
                     fightEntries.add(new FightEntry.Hit(attacker.getOwner().getSide(),
-                            defenders.size() - 1, attackerI, damage)
+                            attackerI, defenders.size() - 1, damage)
                     );
 
                     // Check dead

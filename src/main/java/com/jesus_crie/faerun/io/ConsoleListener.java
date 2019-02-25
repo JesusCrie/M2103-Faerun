@@ -23,8 +23,6 @@ public class ConsoleListener implements Listener {
     /* IO */
     private final PrintStream out;
 
-    private BoardSettings settings;
-
     public ConsoleListener(@Nonnull final PrintStream out) {
         this.out = out;
     }
@@ -112,11 +110,20 @@ public class ConsoleListener implements Listener {
                             // Map hit entries
                             if (entry.isHitEntry()) {
                                 final FightEntry.Hit h = entry.asHitEntry();
-                                return String.format("%s ⚔ %s -%dHP",
-                                        attackers[h.getAttackerIndex()].getClass().getSimpleName(),
-                                        defenders[h.getDefenderIndex()].getClass().getSimpleName(),
-                                        h.getDamage()
-                                );
+
+                                // Take care of hit direction
+                                if (h.getAttackerSide() == e.getRecord().getAttackerSide()) {
+                                    return String.format("%s ⚔ %s -%dHP",
+                                            attackers[h.getAttackerIndex()].getClass().getSimpleName(),
+                                            defenders[h.getDefenderIndex()].getClass().getSimpleName(),
+                                            h.getDamage()
+                                    );
+                                } else {
+                                    return String.format("%s ⚔ %s -%dHP",
+                                            defenders[h.getAttackerIndex()].getClass().getSimpleName(),
+                                            attackers[h.getDefenderIndex()].getClass().getSimpleName(),
+                                            h.getDamage());
+                                }
 
                                 // Map dead entries
                             } else if (entry.isDeadEntry()) {

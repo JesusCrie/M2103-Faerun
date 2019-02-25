@@ -131,7 +131,7 @@ public class ConsoleUtils {
         for (int optI = 1; optI <= options.length; optI++) {
             titleB.append("\t")
                     .append(optI).append(". ")
-                    .append(options[optI].getLeft())
+                    .append(options[optI - 1].getLeft())
                     .append("\n");
         }
 

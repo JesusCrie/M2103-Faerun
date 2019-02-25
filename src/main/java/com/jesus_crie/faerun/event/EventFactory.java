@@ -54,7 +54,7 @@ public final class EventFactory {
     }
 
     @Nonnull
-    public static AskSettingsEvent buildAskBoardSettingsEvent() {
+    public static AskSettingsEvent buildAskSettingsEvent() {
         return new AskSettingsEvent();
     }
 
