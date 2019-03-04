@@ -39,10 +39,7 @@ public final class GameLogic {
      * @param event - The event to dispatch.
      */
     private void dispatchToEveryone(@Nonnull final Event event) {
-        players.forEach((p, io) -> {
-            System.err.println("Dispatch to " + p);
-            io.dispatch(event);
-        });
+        players.forEach((p, io) -> io.dispatch(event));
     }
 
     /**
@@ -280,8 +277,8 @@ public final class GameLogic {
             Collections.shuffle(defenders);
 
             // Copy attackers and defenders for the record
-            final Warrior[] attackersArray = Arrays.copyOf(attackers.toArray(Warrior[]::new), attackers.size());
-            final Warrior[] defendersArray = Arrays.copyOf(defenders.toArray(Warrior[]::new), defenders.size());
+            final Warrior[] attackersArray = Arrays.copyOf(attackers.toArray(new Warrior[0]), attackers.size());
+            final Warrior[] defendersArray = Arrays.copyOf(defenders.toArray(new Warrior[0]), defenders.size());
 
             // Attackers
             attack(attackers, defenders);
@@ -290,7 +287,7 @@ public final class GameLogic {
 
             // Build fight record
             return new FightRecord(cell.getPosition(), attacker.getSide(),
-                    attackersArray, defendersArray, fightEntries.toArray(FightEntry[]::new));
+                    attackersArray, defendersArray, fightEntries.toArray(new FightEntry[0]));
         }
 
         /**

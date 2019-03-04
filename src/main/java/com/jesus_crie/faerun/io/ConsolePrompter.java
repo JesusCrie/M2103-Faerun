@@ -48,19 +48,19 @@ public class ConsolePrompter implements Prompter {
         out.println("Configure game settings:");
 
         out.print(" - Size of the board ? [0-20] ");
-        final int size = ConsoleUtils.askInt(in, out, null, "", 0, 20, 10);
+        final int size = ConsoleUtils.askInt(in, out, null, "", 0, 21, 10);
 
         out.print(" - Cost multiplier ? [1-10] ");
-        final int baseCost = ConsoleUtils.askInt(in, out, null, "", 1, 10, 1);
+        final int baseCost = ConsoleUtils.askInt(in, out, null, "", 1, 11, 1);
 
         out.print(" - Dice amount ? [1-10] ");
-        final int diceAmount = ConsoleUtils.askInt(in, out, null, "", 1, 10, 3);
+        final int diceAmount = ConsoleUtils.askInt(in, out, null, "", 1, 11, 3);
 
         out.print(" - Initial resources ? [10-10000] ");
-        final int initialResources = ConsoleUtils.askInt(in, out, null, "", 10, 10_000, 5);
+        final int initialResources = ConsoleUtils.askInt(in, out, null, "", 10, 10_001, 5);
 
         out.print(" - Resources/round ? [1-10000] ");
-        final int resourcesPerRound = ConsoleUtils.askInt(in, out, null, "", 1, 10_000, 1);
+        final int resourcesPerRound = ConsoleUtils.askInt(in, out, null, "", 1, 10_001, 1);
 
         return new BoardSettings(size, baseCost, diceAmount, initialResources, resourcesPerRound);
     }
@@ -69,6 +69,7 @@ public class ConsolePrompter implements Prompter {
     @Override
     public Map<Class<? extends Warrior>, Integer> onAskQueue(@Nonnull final AskQueueEvent e) {
         out.println("-- Training time !");
+        out.println("Available resources: " + e.getAvailableResources());
 
         out.println(Arrays.stream(e.getCurrentQueue())
                 .map(Class::getSimpleName)
