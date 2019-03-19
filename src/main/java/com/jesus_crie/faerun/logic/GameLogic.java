@@ -1,10 +1,12 @@
 package com.jesus_crie.faerun.logic;
 
+import com.jesus_crie.faerun.config.SaveManager;
 import com.jesus_crie.faerun.event.Event;
 import com.jesus_crie.faerun.event.EventFactory;
 import com.jesus_crie.faerun.io.IOCombiner;
 import com.jesus_crie.faerun.model.Player;
 import com.jesus_crie.faerun.model.Side;
+import com.jesus_crie.faerun.model.board.Board;
 import com.jesus_crie.faerun.model.board.BoardCell;
 import com.jesus_crie.faerun.model.board.BoardSettings;
 import com.jesus_crie.faerun.model.board.Castle;
@@ -21,16 +23,39 @@ public final class GameLogic {
 
     private final Map<Player, IOCombiner> players;
     private final BoardLogic boardLogic;
+    private final boolean enableSave;
     private int roundNumber = 0;
 
-    public GameLogic(@Nonnull final Map<Player, IOCombiner> players,
+    public GameLogic(final boolean enableSave,
+                     @Nonnull final Map<Player, IOCombiner> players,
                      @Nonnull final BoardSettings settings) {
+        this.enableSave = enableSave;
         this.players = players;
         boardLogic = new BoardLogic(settings, new ArrayList<>(players.keySet()));
     }
 
+    public GameLogic(final boolean enableSave,
+                     @Nonnull final Map<Player, IOCombiner> players,
+                     @Nonnull final Board board,
+                     final int roundNumber) {
+        this.enableSave = enableSave;
+        this.players = players;
+        boardLogic = new BoardLogic(board);
+        this.roundNumber = roundNumber;
+    }
+
+    @Nonnull
     public Map<Player, IOCombiner> getPlayers() {
         return players;
+    }
+
+    @Nonnull
+    public BoardLogic getBoardLogic() {
+        return boardLogic;
+    }
+
+    public int getRoundNumber() {
+        return roundNumber;
     }
 
     /**
@@ -56,21 +81,14 @@ public final class GameLogic {
         // Send welcome
         dispatchToEveryone(EventFactory.buildWelcomeEvent());
 
-        // Index current player
-        byte i = -1;
-        // Current player
+        // Init loop vars
         Player current;
         // For each player, until victory
         do {
-            ++i;
-            i %= players.length;
-            current = players[i];
-
             roundNumber++;
+            current = players[roundNumber % players.length];
 
-            // Dispatch new round
             dispatchToEveryone(EventFactory.buildNewRoundEvent(roundNumber, current.getPseudo(), boardLogic.getBoard()));
-
         } while (!performPlayerRound(current));
 
         // Return the winning player
@@ -91,6 +109,9 @@ public final class GameLogic {
         performRoundMoveAndFight(player);
         // Spawn trained units
         performRoundSpawn(player);
+
+        // Save game state
+        if (enableSave) SaveManager.save(this);
 
         return hasWon(player.getSide());
     }
@@ -280,10 +301,15 @@ public final class GameLogic {
             final Warrior[] attackersArray = Arrays.copyOf(attackers.toArray(new Warrior[0]), attackers.size());
             final Warrior[] defendersArray = Arrays.copyOf(defenders.toArray(new Warrior[0]), defenders.size());
 
-            // Attackers
-            attack(attackers, defenders);
-            // Defenders response
-            attack(defenders, attackers);
+            try {
+                // Attackers
+                attack(attackers, defenders);
+                // Defenders response
+                attack(defenders, attackers);
+
+            } catch (DivineHitException e) {
+                fightEntries.add(new FightEntry.DivineHit(e));
+            }
 
             // Build fight record
             return new FightRecord(cell.getPosition(), attacker.getSide(),
@@ -295,15 +321,23 @@ public final class GameLogic {
          *
          * @param attackers - The attackers of this pass.
          * @param defenders - The defenders of this pass.
+         * @throws DivineHitException Thrown if a warrior performs a cirtical hit (> 80% max damage)
          */
         @SuppressWarnings("ConstantConditions")
-        private void attack(@Nonnull final LinkedList<Warrior> attackers, @Nonnull final LinkedList<Warrior> defenders) {
+        private void attack(@Nonnull final LinkedList<Warrior> attackers,
+                            @Nonnull final LinkedList<Warrior> defenders) throws DivineHitException {
             // For each attacker
             for (int attackerI = 0; attackerI < attackers.size(); attackerI++) {
                 final Warrior attacker = attackers.get(attackerI);
 
                 // Compute damages
                 final int damage = Dice.diceRoll(3, attacker.getStrength());
+                if ((float) damage >= (float) Dice.maxRoll(3, attacker.getStrength()) * 0.8f) {
+                    // Critical hit
+                    deadWarriors.addAll(defenders);
+                    throw new DivineHitException(attacker.getOwner().getSide(), attackerI, damage);
+                }
+
 
                 // Check if there's an enemy
                 if (!defenders.isEmpty()) {
@@ -323,4 +357,5 @@ public final class GameLogic {
             }
         }
     }
+
 }

@@ -34,6 +34,18 @@ public class Board {
             cells.add(new BoardCell(i));
     }
 
+    public Board(@Nonnull final BoardSettings settings,
+                 @Nonnull final List<Castle> castles,
+                 @Nonnull final List<BoardCell> cells) {
+        this.settings = settings;
+        this.castles = new HashMap<>();
+        for (Castle castle : castles)
+            this.castles.put(castle.getOwner(), castle);
+
+        this.cells = new ArrayList<>();
+        this.cells.addAll(cells);
+    }
+
     /**
      * @return The settings associated with this board.
      */

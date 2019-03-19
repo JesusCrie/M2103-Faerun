@@ -17,4 +17,15 @@ public class Dice {
     public static int diceRoll(final int faces, final int amount) {
         return RANDOM.ints(amount, 1, faces + 1).sum();
     }
+
+    /**
+     * Compute the max roll you can get from the {@link #diceRoll(int, int)} method.
+     *
+     * @param faces  - The amount of faces of the dice.
+     * @param amount - The amount of dices to roll.
+     * @return The maximum roll you can get with those parameters.
+     */
+    public static int maxRoll(final int faces, final int amount) {
+        return faces * amount;
+    }
 }

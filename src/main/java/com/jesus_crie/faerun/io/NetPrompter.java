@@ -1,9 +1,6 @@
 package com.jesus_crie.faerun.io;
 
-import com.jesus_crie.faerun.event.AskQueueEvent;
-import com.jesus_crie.faerun.event.AskRemoteAddress;
-import com.jesus_crie.faerun.event.AskSettingsEvent;
-import com.jesus_crie.faerun.event.AskUsernameEvent;
+import com.jesus_crie.faerun.event.*;
 import com.jesus_crie.faerun.model.board.BoardSettings;
 import com.jesus_crie.faerun.model.warrior.Warrior;
 import com.jesus_crie.faerun.network.FaerunProtocol;
@@ -21,6 +18,12 @@ public class NetPrompter implements Prompter {
 
     public NetPrompter(@Nonnull final FaerunProtocol.ProtocolServer protocol) {
         this.protocol = protocol;
+    }
+
+    @Nonnull
+    @Override
+    public Boolean onAskResumeGame(@Nonnull final AskResumeGame e) {
+        return protocol.askEvent(e);
     }
 
     @Nonnull

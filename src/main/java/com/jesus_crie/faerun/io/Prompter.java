@@ -17,7 +17,9 @@ public interface Prompter {
     @SuppressWarnings("unchecked")
     @Nonnull
     default <T extends Serializable> T onAsk(@Nonnull final AskEvent<T> e) {
-        if (e instanceof AskUsernameEvent)
+        if (e instanceof AskResumeGame)
+            return (T) onAskResumeGame((AskResumeGame) e);
+        else if (e instanceof AskUsernameEvent)
             return (T) onAskUsername((AskUsernameEvent) e);
         else if (e instanceof AskSettingsEvent)
             return (T) onAskSettings((AskSettingsEvent) e);
@@ -28,6 +30,9 @@ public interface Prompter {
         else
             throw new IllegalArgumentException("This event is unknown: " + e);
     }
+
+    @Nonnull
+    Boolean onAskResumeGame(@Nonnull final AskResumeGame e);
 
     @Nonnull
     String onAskUsername(@Nonnull final AskUsernameEvent e);

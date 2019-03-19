@@ -130,6 +130,20 @@ public class ConsoleUtils {
     }
 
     /**
+     * Ask a simple yes/no prompt, defaults to no if wrong input.
+     *
+     * @param in     - The input where to read from.
+     * @param out    - The output where to print to.
+     * @param prompt - The prompt.
+     * @return True of the user typed 'y' or 'Y'.
+     */
+    public static boolean askYesNo(@Nonnull final Scanner in, @Nonnull final PrintStream out,
+                                   @Nonnull final String prompt) {
+        return ask(in, out, null, prompt + " [y/N] ",
+                s -> s.charAt(0) == 'y' || s.charAt(0) == 'Y');
+    }
+
+    /**
      * Create a menu and ask the user to choose an action and execute the associated {@link Runnable}.
      *
      * @param in      - The input where to read from.

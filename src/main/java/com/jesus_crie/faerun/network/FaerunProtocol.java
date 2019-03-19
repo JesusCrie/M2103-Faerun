@@ -60,6 +60,7 @@ public final class FaerunProtocol {
          * Wait for a client to connect and ask for its username and returns it.
          *
          * @return The username of the remote client.
+         * @throws IllegalStateException If the received event is not a connect event.
          */
         @Nonnull
         public String waitClientAndSetup() {
@@ -70,7 +71,9 @@ public final class FaerunProtocol {
 
             // Wait connect
             try {
-                final ConnectEvent event = (ConnectEvent) handler.receiveEvent();
+                handler.receiveEvent();
+            } catch (TeardownException e) {
+                throw new IllegalStateException("Protocol error: unexpected teardown event during setup !");
             } catch (ClassCastException e) {
                 throw new IllegalStateException("Protocol error: not a ConnectEvent !", e);
             }
@@ -95,8 +98,9 @@ public final class FaerunProtocol {
          * @param request - The request event.
          * @param <T>     - The type of object to wait for.
          * @return The object read from the remote.
-         * @throws ClassCastException If the read object is not what we expect.
+         * @throws IllegalStateException If the read object is not what we expect.
          */
+        @SuppressWarnings("unchecked")
         @Nonnull
         public <T extends Serializable> T askEvent(@Nonnull final AskEvent<T> request) {
             // Serialize and write socket
@@ -104,7 +108,13 @@ public final class FaerunProtocol {
 
             // Wait for response and return it.
             try {
-                return handler.receivePayload();
+                final Serializable obj = handler.receivePayload();
+
+                // If we have that, the client has most likely given up
+                if (obj instanceof TeardownEvent)
+                    throw new TeardownException();
+
+                return (T) obj;
             } catch (ClassCastException e) {
                 throw new IllegalStateException("Protocol Error: the retrieved payload is of the wrong type !", e);
             }

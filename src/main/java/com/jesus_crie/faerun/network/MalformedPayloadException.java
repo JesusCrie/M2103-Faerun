@@ -5,6 +5,8 @@ package com.jesus_crie.faerun.network;
  */
 public class MalformedPayloadException extends RuntimeException {
 
+    private static final long serialVersionUID = -5391668410201814495L;
+
     public MalformedPayloadException() {
         super();
     }

@@ -1,9 +1,6 @@
 package com.jesus_crie.faerun.io;
 
-import com.jesus_crie.faerun.event.AskQueueEvent;
-import com.jesus_crie.faerun.event.AskRemoteAddress;
-import com.jesus_crie.faerun.event.AskSettingsEvent;
-import com.jesus_crie.faerun.event.AskUsernameEvent;
+import com.jesus_crie.faerun.event.*;
 import com.jesus_crie.faerun.model.board.BoardSettings;
 import com.jesus_crie.faerun.model.warrior.*;
 import com.jesus_crie.faerun.utils.Pair;
@@ -34,6 +31,12 @@ public class ConsolePrompter implements Prompter {
 
     public ConsolePrompter() {
         this(System.in, System.out);
+    }
+
+    @Nonnull
+    @Override
+    public Boolean onAskResumeGame(@Nonnull AskResumeGame e) {
+        return ConsoleUtils.askYesNo(in, out, "Do you want to resume your game ?");
     }
 
     @Nonnull

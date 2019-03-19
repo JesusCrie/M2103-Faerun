@@ -1,5 +1,11 @@
 package com.jesus_crie.faerun.network.internal;
 
+import com.jesus_crie.faerun.event.Event;
+import com.jesus_crie.faerun.event.TeardownEvent;
+import com.jesus_crie.faerun.network.MalformedPayloadException;
+import com.jesus_crie.faerun.network.TeardownException;
+
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -39,5 +45,15 @@ public class ServerNetHandler extends NetHandler {
         } catch (IOException e) {
             return false;
         }
+    }
+
+    @Nonnull
+    @Override
+    public Event receiveEvent() throws MalformedPayloadException {
+        final Event e = super.receiveEvent();
+        if (e instanceof TeardownEvent)
+            throw new TeardownException();
+
+        return e;
     }
 }

@@ -127,6 +127,21 @@ public class ConsoleListener implements Listener {
                                             h.getDamage());
                                 }
 
+                                // Map divine hits
+                            } else if (entry.isDivineHit()) {
+                                final FightEntry.DivineHit h = entry.asDivineHit();
+
+                                if (h.getAttackerSide() == e.getRecord().getAttackerSide()) {
+                                    return String.format("%s just performed a DIVINE HIT (%d damages) !!",
+                                            attackers[h.getAttackerIndex()].getClass().getSimpleName(),
+                                            h.getDamage());
+
+                                } else {
+                                    return String.format("%s just performed a DIVINE HIT (%d damages)",
+                                            defenders[h.getAttackerIndex()].getClass().getSimpleName(),
+                                            h.getDamage());
+                                }
+
                                 // Map dead entries
                             } else if (entry.isDeadEntry()) {
                                 final FightEntry.Dead d = entry.asDeadEntry();

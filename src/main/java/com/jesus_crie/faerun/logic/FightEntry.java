@@ -15,6 +15,11 @@ public interface FightEntry extends Serializable {
     @Nonnull
     Hit asHitEntry();
 
+    boolean isDivineHit();
+
+    @Nonnull
+    DivineHit asDivineHit();
+
     boolean isDeadEntry();
 
     @Nonnull
@@ -54,6 +59,17 @@ public interface FightEntry extends Serializable {
         }
 
         @Override
+        public boolean isDivineHit() {
+            return false;
+        }
+
+        @Nonnull
+        @Override
+        public DivineHit asDivineHit() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
         public boolean isDeadEntry() {
             return false;
         }
@@ -79,6 +95,74 @@ public interface FightEntry extends Serializable {
         public int getDamage() {
             return damage;
         }
+
+    }
+
+    /**
+     * Reports a divine hit performed by a warrior.
+     */
+    final class DivineHit implements FightEntry {
+
+        private static final long serialVersionUID = 8975530537443540932L;
+
+        private final Side attackerSide;
+        private final int attackerIndex;
+        private final int damage;
+
+        public DivineHit(@Nonnull final Side attackerSide, final int attackerIndex, final int damage) {
+            this.attackerSide = attackerSide;
+            this.attackerIndex = attackerIndex;
+            this.damage = damage;
+        }
+
+        public DivineHit(@Nonnull final DivineHitException e) {
+            this(e.getSide(), e.getAttackerIndex(), e.getDamage());
+        }
+
+        @Override
+        public boolean isHitEntry() {
+            return false;
+        }
+
+        @Nonnull
+        @Override
+        public Hit asHitEntry() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean isDivineHit() {
+            return true;
+        }
+
+        @Nonnull
+        @Override
+        public DivineHit asDivineHit() {
+            return this;
+        }
+
+        @Override
+        public boolean isDeadEntry() {
+            return false;
+        }
+
+        @Nonnull
+        @Override
+        public Dead asDeadEntry() {
+            throw new UnsupportedOperationException();
+        }
+
+        public Side getAttackerSide() {
+            return attackerSide;
+        }
+
+        public int getAttackerIndex() {
+            return attackerIndex;
+        }
+
+        public int getDamage() {
+            return damage;
+        }
     }
 
     /**
@@ -86,9 +170,10 @@ public interface FightEntry extends Serializable {
      */
     final class Dead implements FightEntry {
 
-        private static final long serialVersionUID = 3875412333491320608L;
 
+        private static final long serialVersionUID = 3875412333491320608L;
         private final Side deadSide;
+
         private final int warriorIndex;
 
         public Dead(@Nonnull final Side deadSide, final int warriorIndex) {
@@ -104,6 +189,17 @@ public interface FightEntry extends Serializable {
         @Nonnull
         @Override
         public Hit asHitEntry() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean isDivineHit() {
+            return false;
+        }
+
+        @Nonnull
+        @Override
+        public DivineHit asDivineHit() {
             throw new UnsupportedOperationException();
         }
 
@@ -125,5 +221,6 @@ public interface FightEntry extends Serializable {
         public int getWarriorIndex() {
             return warriorIndex;
         }
+
     }
 }

@@ -1,6 +1,7 @@
 package com.jesus_crie.faerun.network.internal;
 
 import com.jesus_crie.faerun.event.Event;
+import com.jesus_crie.faerun.event.TeardownEvent;
 import com.jesus_crie.faerun.network.MalformedPayloadException;
 
 import javax.annotation.Nonnull;
@@ -55,15 +56,13 @@ public abstract class NetHandler implements Closeable {
     /**
      * Wait for an object to be retrieved from the socket.
      *
-     * @param <T> - The type of object to wait for.
      * @return The deserialized object read from the socket.
      */
-    @SuppressWarnings("unchecked")
-    public <T extends Serializable> T receivePayload() {
+    public Serializable receivePayload() {
         checkOrThrow();
 
         try {
-            return (T) fromClient.readObject();
+            return (Serializable) fromClient.readObject();
         } catch (ClassNotFoundException e) {
             throw new MalformedPayloadException("An unknown class was read !", e);
         } catch (InvalidClassException | StreamCorruptedException | OptionalDataException e) {
@@ -80,7 +79,7 @@ public abstract class NetHandler implements Closeable {
      */
     @Nonnull
     public Event receiveEvent() throws MalformedPayloadException {
-        return receivePayload();
+        return (Event) receivePayload();
     }
 
     /**

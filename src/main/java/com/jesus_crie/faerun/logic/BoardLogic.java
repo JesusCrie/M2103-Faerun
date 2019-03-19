@@ -24,6 +24,10 @@ public class BoardLogic {
         board = new Board(settings, players);
     }
 
+    public BoardLogic(@Nonnull final Board board) {
+        this.board = board;
+    }
+
     /**
      * @return The associated board.
      */

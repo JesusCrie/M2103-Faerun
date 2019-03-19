@@ -53,6 +53,11 @@ public final class EventFactory {
     }
 
     @Nonnull
+    public static AskResumeGame buildAskResumeGame() {
+        return new AskResumeGame();
+    }
+
+    @Nonnull
     public static AskUsernameEvent buildAskUsernameEvent() {
         return new AskUsernameEvent();
     }
