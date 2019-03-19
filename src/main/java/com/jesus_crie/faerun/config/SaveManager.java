@@ -17,7 +17,6 @@ public class SaveManager {
     private static Player cachedPlayerRight;
 
     static {
-        System.err.println("Triggered load");
         CACHE.load();
     }
 
